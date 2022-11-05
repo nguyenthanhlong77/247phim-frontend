@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import videojs from 'video.js';
 import PropTypes from 'prop-types';
 import { Link, useLocation } from 'react-router-dom';
@@ -22,6 +22,7 @@ function Watch(props) {
   const dispatch = useDispatch();
   const location = useLocation();
   const infomationMovie = useSelector((state) => state.movie.infoMovieSelected);
+  const [serverVideo, setServerVideo] = useState('local');
 
   useEffect(() => {
     // update current movie
@@ -75,18 +76,39 @@ function Watch(props) {
       <div className="player">
         <Container style={{ backgroundColor: '#000' }}>
           {/* player */}
-          <VideoJS options={videoOptions} onReady={handlePlayerReady} />
+          {serverVideo === 'local' ? (
+            <VideoJS options={videoOptions} onReady={handlePlayerReady} />
+          ) : (
+            // eslint-disable-next-line jsx-a11y/iframe-has-title
+            <iframe
+              width="100%"
+              height="600"
+              src="https://short.ink/KqpcNzCal"
+              frameborder="0"
+              scrolling="0"
+              allowfullscreen
+            ></iframe>
+          )}
           {/* section change server video */}
           <div className="servers" style={{ display: 'flex', 'justify-content': 'center' }}>
-            <Button type="button" disabled variant="info" className="change-server">
-              Server 1
+            <Button
+              type="button"
+              variant="info"
+              onClick={() => setServerVideo('local')}
+              className={`change-server  ${serverVideo === 'local' ? 'disabled' : ''} `}
+            >
+              Server local
             </Button>
-            <Button variant="info" className="change-server">
+            <Button
+              variant="info"
+              onClick={() => setServerVideo('abyss')}
+              className={`change-server  ${serverVideo === 'abyss' ? 'disabled' : ''} `}
+            >
               Server abyss
             </Button>
-            <Button variant="info" className="change-server">
+            {/* <Button variant="info" className="change-server">
               Server mega
-            </Button>
+            </Button> */}
           </div>
           {/* movie summary */}
           <InformationMovie type="summary" />

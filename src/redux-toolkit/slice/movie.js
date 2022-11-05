@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initState = {
   _id: undefined,
@@ -17,7 +17,7 @@ const initState = {
 };
 
 const movieSlice = createSlice({
-  name: "movie",
+  name: 'movie',
   initialState: initState,
   reducers: {
     isSelecting(state, action) {
@@ -104,14 +104,17 @@ const movieSlice = createSlice({
     addNewComment(state, action) {
       state.updateComments = true;
     },
-    addNewCommentSussces(state, action) {
+    addNewCommentSuccess(state, action) {
       state.updateComments = false;
-      state.commentsMovieSlelected = action.payload;
+      state.commentsMovieSlelected = [...action.payload];
     },
     updateCurentEpisodeSuccess(state, action) {
       state.currentEpisode = action.payload;
     },
     reloadData(state, action) {
+      state.isUpdating = true;
+    },
+    updateRate(state, action) {
       state.isUpdating = true;
     },
   },

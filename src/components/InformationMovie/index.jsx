@@ -136,7 +136,11 @@ function InformationMovie(props) {
                   <button onClick={handleLikeMovie}>{typeLike ? 'Like' : 'Unlike'}</button>
                 </Col>
                 <Col xs={12} md={9}>
-                  <Rating amount={infomationMovie.rate.amount} total={infomationMovie.rate.total} />
+                  <Rating
+                    movieID={infomationMovie._id}
+                    amount={infomationMovie.rate.amount}
+                    total={infomationMovie.rate.total}
+                  />
                 </Col>
               </Row>
             </Col>
@@ -193,7 +197,11 @@ function InformationMovie(props) {
                   <button onClick={handleLikeMovie}>{typeLike ? 'Like' : 'Unlike'}</button>
                 </Col>
                 <Col xs={12} md={9}>
-                  <Rating amount={infomationMovie.rate.amount} total={infomationMovie.rate.total} />
+                  <Rating
+                    movieID={infomationMovie._id}
+                    amount={infomationMovie.rate.amount}
+                    total={infomationMovie.rate.total}
+                  />
                 </Col>
               </Row>
             </div>

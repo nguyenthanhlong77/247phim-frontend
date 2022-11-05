@@ -27,12 +27,26 @@ function* handleReloadData(action) {
 function* handleCreateNewComment(action) {
   try {
     const res = yield call(userApi.addNewComment, action.payload);
-    yield put(movieActions.addNewCommentSussces(res.commentsUpdated));
+    yield put(movieActions.addNewCommentSuccess(res.commentsUpdated));
   } catch (error) {}
 }
+
+function* handleUpdateRate(action) {
+  try {
+    const res = yield call(publicApi.updateRate, action.payload.movieID, {
+      value: action.payload.value,
+    });
+
+    yield put(movieActions.updateMovieSuccess(res.movieUpdated));
+  } catch (error) {
+    yield put(movieActions.updateMovieFailed);
+  }
+}
+
 export default function* movieSaga() {
   yield takeLatest(movieActions.isSelecting.type, handleFetchMovie);
   yield takeEvery(movieActions.updateView.type, handleUpdateView);
+  yield takeEvery(movieActions.updateRate.type, handleUpdateRate);
   yield takeEvery(movieActions.addNewComment.type, handleCreateNewComment);
   yield takeEvery(movieActions.reloadData.type, handleReloadData);
 }
