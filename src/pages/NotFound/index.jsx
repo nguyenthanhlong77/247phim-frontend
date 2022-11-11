@@ -9,7 +9,7 @@ import './style.scss';
 
 function index(props) {
   return (
-    <div style={{ paddingTop: '200px', paddingLeft: '200px' }}>
+    <div style={{ paddingTop: '200px', paddingLeft: '200px', height: '60vh' }}>
       <h1>404. Không tìm thấy đường dẫn này</h1>
       <h2>
         Bạn có thể truy cập vào

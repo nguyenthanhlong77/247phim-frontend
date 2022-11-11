@@ -14,15 +14,20 @@ function App() {
   const location = useLocation();
   const dispatch = useDispatch();
   const role = useSelector((state) => state.auth.role);
+  const movieSelected = useSelector((state) => state.movie.isSelected);
   useEffect(() => {
-    const isWatchMovie = location.pathname.split('/')[1] === 'xem-phim' ? true : false;
+    if (!(location.pathname.split('/')[1] === 'phim') && movieSelected)
+      dispatch(movieActions.unSelected());
 
-    if (!isWatchMovie) dispatch(movieActions.unSelected());
+    if (location.pathname.split('/')[1] === 'phim') {
+      dispatch(movieActions.isSelecting(location.pathname.split('/')[2]));
+    }
+
+    // if (location.pathname.split('/')[1] === 'xem-phim') {
+    //   dispatch(movieActions.isSelecting(location.pathname.split('/')[2]));
+    //   dispatch(movieActions.updateCurentEpisodeSuccess(undefined));
+    // }
   }, [location]);
-
-  useEffect(() => {
-    dispatch(publicActions.loadingData());
-  }, []);
 
   return (
     <div className="app">

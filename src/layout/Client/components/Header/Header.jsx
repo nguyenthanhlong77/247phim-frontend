@@ -18,13 +18,13 @@ import { authActions } from '../../../../redux-toolkit/slice/auth';
 // img
 import logo from '../../../../assets/photos/logo.svg';
 
+import { years, genres, countries } from '../../../../assets/category/index';
+
 const Header = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const currentUser = useSelector((state) => state.auth.currentUser);
-  const genres = useSelector((state) => state.public.genres);
-  const countries = useSelector((state) => state.public.countries);
 
   const {
     register,
@@ -43,7 +43,6 @@ const Header = (props) => {
     { name: 'Phim bộ Nhật Bản', name_URL: 'anh' },
     { name: 'Phim bộ Thái Lan', name_URL: 'han-quoc' },
   ];
-  const years = [2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015];
 
   const handleSubmitSearch = (data) => {
     let name = data.name;
@@ -83,13 +82,12 @@ const Header = (props) => {
             {years.map((item, index) => {
               return (
                 <Link
-                  to={`/phim-le/${item}`}
+                  to={`/phim-le/${item.url}`}
                   type_movie="phimle"
-                  year={item}
                   key={index}
                   className="dropdown-item"
                 >
-                  Phim lẻ {item}
+                  Phim lẻ {item.name}
                 </Link>
               );
             })}
@@ -98,7 +96,7 @@ const Header = (props) => {
             {phimBo.map((item, index) => {
               return (
                 <Link
-                  to={`/phim-bo/${item.name_URL}`}
+                  to={`/phim-bo/${item.url}`}
                   type_movie="phimbo"
                   key={index}
                   className="dropdown-item"
@@ -112,7 +110,7 @@ const Header = (props) => {
             {countries ? (
               countries.map((item, index) => {
                 return (
-                  <Link to={`/quoc-gia/${item.name_URL}`} key={index} className="dropdown-item">
+                  <Link to={`/quoc-gia/${item.url}`} key={index} className="dropdown-item">
                     {item.name}
                   </Link>
                 );
@@ -125,7 +123,7 @@ const Header = (props) => {
             {genres ? (
               genres.map((item, index) => {
                 return (
-                  <Link to={`/the-loai/${item.name_URL}`} key={index} className="dropdown-item">
+                  <Link to={`/the-loai/${item.url}`} key={index} className="dropdown-item">
                     {item.name}
                   </Link>
                 );

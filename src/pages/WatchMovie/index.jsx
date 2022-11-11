@@ -14,12 +14,12 @@ function WatchMovie(props) {
 
   const location = useLocation();
 
-  useEffect(() => {
-    // update current movie
-    const movieURL = location.pathname.split('/')[2];
-    dispatch(movieActions.isSelecting(movieURL));
-    dispatch(movieActions.updateCurentEpisodeSuccess(undefined));
-  }, [location.pathname.split('/')[2]]);
+  // useEffect(() => {
+  //   // update current movie
+  //   const movieURL = location.pathname.split('/')[2];
+  //   dispatch(movieActions.isSelecting(movieURL));
+
+  // }, [location.pathname.split('/')[2]]);
 
   return (
     <div style={{ color: '#e5e5e5' }}>

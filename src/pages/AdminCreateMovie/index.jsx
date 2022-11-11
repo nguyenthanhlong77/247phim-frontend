@@ -12,16 +12,16 @@ import './style.scss';
 
 const schema = yup
   .object({
-    name: yup.string().required('Bạn phải nhập thông tin này!'),
-    other_name: yup.string().required('Bạn phải nhập thông tin này!'),
-    name_URL: yup.string().required('Bạn phải nhập thông tin này!'),
+    // name: yup.string().required('Bạn phải nhập thông tin này!'),
+    // other_name: yup.string().required('Bạn phải nhập thông tin này!'),
+    // name_URL: yup.string().required('Bạn phải nhập thông tin này!'),
     // year: yup.number("Phải nhập số").required("Bạn phải nhập thông tin này!"),
     // duration: yup.string().required("Bạn phải nhập thông tin này!"),
     // director: yup.string().required("Bạn phải nhập thông tin này!"),
     // country: yup.string().required("Bạn phải nhập thông tin này!"),
     // type_movie: yup.string().required("Bạn phải nhập thông tin này!"),
     // casts: yup.string().required("Bạn phải nhập thông tin này!"),
-    genres: yup.array().required('Bạn phải nhập thông tin này!'),
+    // genres: yup.array().required('Bạn phải nhập thông tin này!'),
     // language: yup.string().required("Bạn phải nhập thông tin này!"),
     // episodes: yup.string().required("Bạn phải nhập thông tin này!"),
     // URL_image: yup.string().required("Bạn phải nhập thông tin này!"),

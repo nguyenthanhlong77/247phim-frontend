@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import { BsStarFill, BsStarHalf, BsStar } from 'react-icons/bs';
 import { Start } from '@mui/icons-material';
 import './style.scss';
+import { useDispatch } from 'react-redux';
+import { movieActions } from '../../redux-toolkit/slice/movie';
 
 Rating.propTypes = {};
 
 function Rating(props) {
+  const dispatch = useDispatch();
   const stars = [1, 2, 3, 4, 5];
   const [currentValue, setCurrentValue] = useState(
     props.amount === 0 ? 0 : Math.ceil(props.total / props.amount)
@@ -15,6 +18,8 @@ function Rating(props) {
 
   const handleOnClick = (rate) => {
     // setCurrentValue(rate);
+    console.log(1);
+    //  dispatch(movieActions.updateRate({ value: rate }));
   };
 
   const handleOnMouseOver = (index) => {

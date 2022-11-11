@@ -6,8 +6,10 @@ import userApi from '../../api/userApi';
 function* handleFetchMovie(action) {
   try {
     const res = yield call(publicApi.getMovieByURL, action.payload);
-    yield put(movieActions.isSelected(res.movie));
-  } catch (error) {}
+    yield put(movieActions.selectedSuccess(res.movie));
+  } catch (error) {
+    yield put(movieActions.selectedFailed);
+  }
 }
 
 function* handleUpdateView(action) {
@@ -30,9 +32,19 @@ function* handleCreateNewComment(action) {
     yield put(movieActions.addNewCommentSussces(res.commentsUpdated));
   } catch (error) {}
 }
+function* handleUpdateRate(action) {
+  try {
+    const res = yield call(publicApi.updateRate, action.payload);
+    yield put(movieActions.updateMovieSuccess(res.movieUpdated));
+  } catch (error) {
+    yield put(movieActions.updateMovieFailed);
+  }
+}
+
 export default function* movieSaga() {
   yield takeLatest(movieActions.isSelecting.type, handleFetchMovie);
   yield takeEvery(movieActions.updateView.type, handleUpdateView);
+  yield takeEvery(movieActions.updateRate.type, handleUpdateRate);
   yield takeEvery(movieActions.addNewComment.type, handleCreateNewComment);
   yield takeEvery(movieActions.reloadData.type, handleReloadData);
 }

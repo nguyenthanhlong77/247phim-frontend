@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initState = {
   _id: undefined,
@@ -17,9 +17,21 @@ const initState = {
 };
 
 const movieSlice = createSlice({
-  name: "movie",
+  name: 'movie',
   initialState: initState,
   reducers: {
+    selecting(state) {
+      state.isSelecting = true;
+    },
+    selectedSuccess(state, action) {
+      state.isSelecting = false;
+      state.isSelected = true;
+      state.currentMovie = action.payload;
+    },
+    selectedFailed(state, action) {
+      state.isSelecting = false;
+      state.isSelected = false;
+    },
     isSelecting(state, action) {
       state.isSelecting = true;
     },
@@ -112,6 +124,9 @@ const movieSlice = createSlice({
       state.currentEpisode = action.payload;
     },
     reloadData(state, action) {
+      state.isUpdating = true;
+    },
+    updateRate(state, action) {
       state.isUpdating = true;
     },
   },

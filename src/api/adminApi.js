@@ -1,16 +1,16 @@
-import axiosClient from "./axiosClient";
+import axiosClient from './axiosClient';
 
 const adminApi = {
   getAllMovies: (params) => {
-    const url = "/admin/movies";
+    const url = '/admin/movies';
     return axiosClient.get(url, { params });
   },
   getAllUsers: (params) => {
-    const url = "/admin/users";
+    const url = '/admin/users';
     return axiosClient.get(url, { params });
   },
   addNewMovie: (params) => {
-    const url = "/admin/movies/create";
+    const url = '/admin/movies/create';
     return axiosClient.post(url, params);
   },
   removeMovie: (movieID) => {
@@ -22,7 +22,7 @@ const adminApi = {
     return axiosClient.post(url);
   },
   addNewSlide: (params) => {
-    const url = "/admin/slides/create";
+    const url = '/admin/slides/create';
     return axiosClient.post(url, params);
   },
   addNewEpisode: (movieID, data) => {
