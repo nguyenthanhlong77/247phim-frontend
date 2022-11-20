@@ -2,6 +2,7 @@ import React from 'react';
 import './style.scss';
 // react-bootstrap
 import { Col, Container, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 Footer.propTypes = {};
 
@@ -10,59 +11,59 @@ function Footer(props) {
     <div className="footer">
       <Container>
         <Row>
-          <Col className="col-lg-4 col-6">
+          <Col md={4}>
             <p className="title">Phim lẻ</p>
-            <a className="footer-link" href="#/phim-le/hanh-dong">
+            <Link className="footer-link" to="/phim-le/hanh-dong">
               Phim hành động
-            </a>
-            <a className="footer-link" href="#/phim-le/kiem-hiep">
+            </Link>
+            <Link className="footer-link" to="/phim-le/kiem-hiep">
               Phim kiếm hiệp
-            </a>
-            <a className="footer-link" href="#/phim-le/kinh-di">
+            </Link>
+            <Link className="footer-link" to="/phim-le/kinh-di">
               Phim kinh dị
-            </a>
-            <a className="footer-link" href="#/phim-le/vien-tuong">
+            </Link>
+            <Link className="footer-link" to="/phim-le/vien-tuong">
               Phim viễn Tưởng
-            </a>
-            <a className="footer-link" href="#/phim-le/">
+            </Link>
+            <Link className="footer-link" to="/phim-le/hoat-hinh">
               Phim Hoạt hình
-            </a>
+            </Link>
           </Col>
-          <Col className="col-lg-4 col-6">
+          <Col md={4}>
             <p className="title">Phim bộ</p>
-            <a className="footer-link" href="#/phim-le/">
+            <Link className="footer-link" to="/phim-le/">
               Phim siêu anh hùng
-            </a>
-            <a className="footer-link" href="#/phim-le/">
+            </Link>
+            <Link className="footer-link" to="/phim-le/">
               Phim tình cảm
-            </a>
-            <a className="footer-link" href="#/phim-le/">
+            </Link>
+            <Link className="footer-link" to="/phim-le/">
               Phim tài liệu
-            </a>
-            <a className="footer-link" href="#/phim-le/">
+            </Link>
+            <Link className="footer-link" to="/phim-le/">
               Phim hài
-            </a>
-            <a className="footer-link" href="#/phim-le/">
+            </Link>
+            <Link className="footer-link" to="/phim-le/">
               Phim thảm họa
-            </a>
+            </Link>
           </Col>
-          <Col className="col-lg-4 col-6">
+          <Col md={4}>
             <p className="title">TV Show</p>
-            <a className="footer-link" href="/phim-bo/">
+            <Link className="footer-link" href="/phim-bo/">
               Phim bộ Hàn Quốc
-            </a>
-            <a className="footer-link" href="/phim-bo/">
+            </Link>
+            <Link className="footer-link" href="/phim-bo/">
               Phim bộ Trung Quốc
-            </a>
-            <a className="footer-link" href="/phim-bo/">
+            </Link>
+            <Link className="footer-link" href="/phim-bo/">
               Phim bộ Mỹ
-            </a>
-            <a className="footer-link" href="/phim-bo/">
+            </Link>
+            <Link className="footer-link" href="/phim-bo/">
               Phim bộ Việt Nam
-            </a>
-            <a className="footer-link" href="/phim-bo/">
+            </Link>
+            <Link className="footer-link" href="/phim-bo/">
               Phim bộ Hồng Kông
-            </a>
+            </Link>
           </Col>
         </Row>
       </Container>

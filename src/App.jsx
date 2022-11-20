@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.scss';
-import { PrivateRoutes, PublicRoutes } from './Router';
-import { Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import './App.scss';
+import Admin from './layout/Admin';
+import Client from './layout/Client';
 import { movieActions } from './redux-toolkit/slice/movie';
 import { publicActions } from './redux-toolkit/slice/public';
-import { useLocation } from 'react-router-dom';
-import Client from './layout/Client';
-import Admin from './layout/Admin';
+import { PrivateRoutes, PublicRoutes } from './Router';
 
 function App() {
   const location = useLocation();
   const dispatch = useDispatch();
   const role = useSelector((state) => state.auth.role);
+  const isSelected = useSelector((state) => state.movie.isSelected);
   useEffect(() => {
-    const isWatchMovie = location.pathname.split('/')[1] === 'xem-phim' ? true : false;
+    if (
+      location.pathname.split('/')[1] === 'phim' ||
+      location.pathname.split('/')[1] === 'xem-phim'
+    )
+      dispatch(movieActions.selecting(location.pathname.split('/')[2]));
 
-    if (!isWatchMovie) dispatch(movieActions.unSelected());
-  }, [location]);
+    if (
+      isSelected &&
+      (location.pathname.split('/')[1] != 'phim' || location.pathname.split('/')[1] != 'xem-phim')
+    )
+      dispatch(movieActions.unSelected());
+  }, [location.pathname]);
 
   useEffect(() => {
     dispatch(publicActions.loadingData());

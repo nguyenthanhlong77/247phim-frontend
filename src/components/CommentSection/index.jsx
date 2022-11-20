@@ -1,19 +1,18 @@
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import { useEffect } from 'react';
+import { Button, Form, Container } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { movieActions } from '../../redux-toolkit/slice/movie';
 import Comment from '../Comment';
 import './style.scss';
-CommentSection.propTypes = {};
 
 function CommentSection(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const comments = useSelector((state) => state.movie.commentsMovieSlelected);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const movieID = useSelector((state) => state.movie._id);
+  const movie = useSelector((state) => state.movie.currentMovie);
+
   const {
     register,
     setValue,
@@ -27,7 +26,7 @@ function CommentSection(props) {
 
   const handleComment = (data) => {
     if (isLoggedIn && data) {
-      dispatch(movieActions.addNewComment({ content: data.comment, movieID: movieID }));
+      dispatch(movieActions.addNewComment({ content: data.comment, movie: movie._id }));
       setValue('comment', '');
     }
     if (!isLoggedIn) {
@@ -41,18 +40,20 @@ function CommentSection(props) {
       <div className="section-title">
         <h3>Comment</h3>
       </div>
-      <div className="container">
+      <Container>
         <div className="comment-list">
-          {comments ? (
-            comments.map((comment, index) => (
-              <Comment
-                key={index}
-                content={comment.body}
-                create_at={comment.create_at}
-                URL_avatar={comment.user.URL_avatar}
-                username={comment.user.username}
-              />
-            ))
+          {movie ? (
+            <>
+              {movie.comments.map((comment, index) => (
+                <Comment
+                  key={index}
+                  content={comment.content}
+                  create_at={comment.createdAt}
+                  URL_avatar={comment.user.URL_avatar}
+                  username={comment.user.username}
+                />
+              ))}
+            </>
           ) : (
             <></>
           )}
@@ -74,7 +75,7 @@ function CommentSection(props) {
             Bình luận
           </Button>
         </Form>
-      </div>
+      </Container>
     </div>
   );
 }

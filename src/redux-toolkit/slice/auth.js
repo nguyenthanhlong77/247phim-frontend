@@ -55,7 +55,8 @@ const authSlice = createSlice({
 
     updateLikeMoviesSuccess(state, action) {},
 
-    reloadData(state, action) {
+    reloadData(state, action) {},
+    reloadDataSuccess(state, action) {
       state.currentUser = action.payload;
     },
   },

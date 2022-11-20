@@ -6,6 +6,5 @@ import publicSaga from './publicSaga';
 import adminSaga from './adminSaga';
 
 export default function* rootSaga() {
-  console.log('root saga');
   yield all([movieSaga(), authSaga(), publicSaga(), adminSaga()]);
 }

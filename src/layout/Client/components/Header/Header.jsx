@@ -18,6 +18,8 @@ import { authActions } from '../../../../redux-toolkit/slice/auth';
 // img
 import logo from '../../../../assets/photos/logo.svg';
 
+// import { years, genres, countries } from '../../../../assets/category/index';
+
 const Header = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,6 +36,8 @@ const Header = (props) => {
     reset,
   } = useForm();
 
+  const years = [2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015];
+
   // Default list series movie
   const phimBo = [
     { name: 'Phim bộ Anh', name_URL: 'anh' },
@@ -43,8 +47,6 @@ const Header = (props) => {
     { name: 'Phim bộ Nhật Bản', name_URL: 'anh' },
     { name: 'Phim bộ Thái Lan', name_URL: 'han-quoc' },
   ];
-  const years = [2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015];
-
   const handleSubmitSearch = (data) => {
     let name = data.name;
     reset();
