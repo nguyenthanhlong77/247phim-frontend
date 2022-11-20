@@ -25,9 +25,9 @@ const adminApi = {
     const url = '/admin/slides/create';
     return axiosClient.post(url, params);
   },
-  addNewEpisode: (movieID, data) => {
-    const url = `/admin/movies/${movieID}/episodes/create`;
-    return axiosClient.patch(url, data);
+  addNewEpisode: (data) => {
+    const url = `/admin/episodes/create`;
+    return axiosClient.post(url, data);
   },
 };
 

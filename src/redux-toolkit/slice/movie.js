@@ -11,7 +11,7 @@ const initState = {
   currentMovie: undefined,
   episodeSelected: undefined,
   infoMovieSelected: undefined,
-  commentsMovieSlelected: undefined,
+  commentsMovieSelected: undefined,
   updateInfoSucces: false,
   updateComments: false,
 };
@@ -32,36 +32,6 @@ const movieSlice = createSlice({
       state.isSelecting = false;
       state.isSelected = false;
     },
-    isSelecting(state, action) {
-      state.isSelecting = true;
-    },
-    isSelected(state, action) {
-      state._id = action.payload._id;
-      state.isSelecting = false;
-      state.isSelected = true;
-      state.currentMovie = action.payload;
-      state.commentsMovieSlelected = action.payload.comments;
-
-      state.infoMovieSelected = {
-        _id: action.payload._id,
-        name: action.payload.name,
-        name_URL: action.payload.name_URL,
-        other_name: action.payload.other_name,
-        year: action.payload.year,
-        views: action.payload.views,
-        likes: action.payload.likes,
-        URL_image: action.payload.URL_image,
-        description: action.payload.description,
-        duration: action.payload.duration,
-        director: action.payload.director,
-        country: action.payload.country,
-        genres: action.payload.genres,
-        casts: action.payload.casts,
-        rate: action.payload.rate,
-        episodes: action.payload.episodes,
-      };
-    },
-
     unSelected(state, action) {
       state._id = undefined;
       state.isSelecting = false;
@@ -71,7 +41,12 @@ const movieSlice = createSlice({
       state.currentEpisode = undefined;
       state.infoMovieSelected = undefined;
     },
-
+    updateView(state, action) {
+      state.isUpdating = true;
+    },
+    updateLike(state, action) {
+      state.isUpdating = true;
+    },
     updateMovieSuccess(state, action) {
       state._id = action.payload._id;
       state.updateComments = false;
@@ -80,6 +55,21 @@ const movieSlice = createSlice({
       state.isUpdating = false;
       state.isUpdated = true;
       state.currentMovie = action.payload;
+    },
+    updateCurrentEpisode(state, action) {
+      state.currentEpisode = action.payload;
+    },
+
+    isSelecting(state, action) {
+      state.isSelecting = true;
+    },
+    isSelected(state, action) {
+      state._id = action.payload._id;
+      state.isSelecting = false;
+      state.isSelected = true;
+      state.currentMovie = action.payload;
+      state.commentsMovieSelected = action.payload.comments;
+
       state.infoMovieSelected = {
         _id: action.payload._id,
         name: action.payload.name,
@@ -99,9 +89,7 @@ const movieSlice = createSlice({
         episodes: action.payload.episodes,
       };
     },
-    updateView(state, action) {
-      state.isUpdating = true;
-    },
+
     updateMovieFailed(state, action) {
       state.isUpdating = false;
       state.isUpdated = false;
@@ -116,15 +104,18 @@ const movieSlice = createSlice({
     addNewComment(state, action) {
       state.updateComments = true;
     },
-    addNewCommentSussces(state, action) {
+    addNewCommentSuccess(state, action) {
       state.updateComments = false;
-      state.commentsMovieSlelected = action.payload;
+      // state.commentsMovieSelected = [...action.payload];
+    },
+    addNewCommentFailed(state, action) {
+      state.updateComments = false;
     },
     updateCurentEpisodeSuccess(state, action) {
       state.currentEpisode = action.payload;
     },
     reloadData(state, action) {
-      state.isUpdating = true;
+      state.currentMovie = action.payload;
     },
     updateRate(state, action) {
       state.isUpdating = true;

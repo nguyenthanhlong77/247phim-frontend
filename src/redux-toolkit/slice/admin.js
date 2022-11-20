@@ -3,10 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 const initState = {
   movielist: undefined,
   loadingData: false,
+  movieSelected: undefined,
 };
 
 const adminSlice = createSlice({
-  name: 'movieList',
+  name: 'admin',
   initialState: initState,
   reducers: {
     fetchMovieList(state, action) {

@@ -11,15 +11,13 @@ Rating.propTypes = {};
 function Rating(props) {
   const dispatch = useDispatch();
   const stars = [1, 2, 3, 4, 5];
-  const [currentValue, setCurrentValue] = useState(
-    props.amount === 0 ? 0 : Math.ceil(props.total / props.amount)
-  );
+
   const [hoverValue, setHoverValue] = useState(0);
 
   const handleOnClick = (rate) => {
     // setCurrentValue(rate);
-    console.log(1);
-    //  dispatch(movieActions.updateRate({ value: rate }));
+
+    dispatch(movieActions.updateRate({ movieID: props.movieID, value: rate }));
   };
 
   const handleOnMouseOver = (index) => {
@@ -37,7 +35,7 @@ function Rating(props) {
           <>
             <BsStarFill
               className={`star 
-              ${currentValue >= star ? 'star-rated' : ' '}
+              ${Math.round(props.total / props.amount) >= star ? 'star-rated' : ' '}
               ${hoverValue >= star ? 'star-on' : 'star-off'}
               `}
               key={star}

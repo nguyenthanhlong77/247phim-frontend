@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import videojs from 'video.js';
 import PropTypes from 'prop-types';
 import { Link, useLocation } from 'react-router-dom';
@@ -19,34 +19,21 @@ Watch.propTypes = {};
 
 function Watch(props) {
   const playerRef = useRef(null);
+  const currentEpisode = useSelector((state) => state.movie.currentEpisode);
+  const [currentSource, setCurrentSource] = useState('');
   const dispatch = useDispatch();
   const location = useLocation();
-  const infomationMovie = useSelector((state) => state.movie.infoMovieSelected);
+  const currentMovie = useSelector((state) => state.movie.currentMovie);
+  const [serverVideo, setServerVideo] = useState('local');
 
   useEffect(() => {
-    // update current movie
-    const movieURL = location.pathname.split('/')[2];
-    dispatch(movieActions.isSelecting(movieURL));
-    dispatch(movieActions.updateCurentEpisodeSuccess(undefined));
-  }, [location.pathname.split('/')[2]]);
-
-  const videoOptions = {
-    autoplay: false,
-    controls: true,
-    responsive: true,
-    fluid: true,
-    playbackRates: [0.5, 1, 1.5, 2],
-    controlBar: {
-      subsCapsButton: true,
-    },
-    poster: poster,
-    sources: [
-      {
-        src: 'http://localhost:4000/videos/video__1655945327900.mp4',
-        type: 'video/mp4',
-      },
-    ],
-  };
+    currentMovie?.episodes.map((episode) => {
+      if (episode.name_URL === location.pathname.split('/')[3]) {
+        dispatch(movieActions.updateCurrentEpisode(episode));
+        return;
+      }
+    });
+  }, [location.pathname.split('/')[3], currentMovie]);
 
   const handlePlayerReady = (player) => {
     playerRef.current = player;
@@ -60,11 +47,17 @@ function Watch(props) {
     //   videojs.log('player will dispose');
     // });
   };
+
+  // useEffect(() => {
+  //   currentMovie?.sources?.map((source) => {
+  //     if (source.server === serverVideo) setCurrentSource(source.src);
+  //   });
+  // }, [serverVideo]);
+
   const handleChangeEpisode = (e) => {
-    infomationMovie.episodes.map((episode) => {
+    currentMovie.episodes.map((episode) => {
       if (episode.name === e.target.innerText) {
-        dispatch(movieActions.updateView(infomationMovie._id));
-        dispatch(movieActions.updateCurentEpisodeSuccess(episode));
+        dispatch(movieActions.updateView(currentMovie._id));
         window.scrollTo(0, 0);
       }
     });
@@ -75,17 +68,89 @@ function Watch(props) {
       <div className="player">
         <Container style={{ backgroundColor: '#000' }}>
           {/* player */}
-          <VideoJS options={videoOptions} onReady={handlePlayerReady} />
+          {serverVideo === 'local' ? (
+            <VideoJS
+              options={{
+                autoplay: false,
+                controls: true,
+                responsive: true,
+                fluid: true,
+                playbackRates: [0.5, 1, 1.5, 2],
+                controlBar: {
+                  subsCapsButton: true,
+                },
+                poster: poster,
+                sources: [
+                  {
+                    src: currentEpisode ? currentEpisode.sources[0].src : '',
+                    type: 'video/mp4',
+                  },
+                ],
+              }}
+              onReady={handlePlayerReady}
+            />
+          ) : serverVideo === 'abyss' ? (
+            <iframe
+              title="video abyss"
+              width="100%"
+              height="600"
+              src={currentEpisode ? currentEpisode.sources[1].src : ''}
+              frameborder="0"
+              scrolling="0"
+              allowfullscreen
+            ></iframe>
+          ) : serverVideo === 'mega' ? (
+            <iframe
+              title="video mega"
+              width="100%"
+              height="600"
+              frameborder="0"
+              src={currentEpisode ? currentEpisode.sources[3].src : ''}
+              allowfullscreen
+            ></iframe>
+          ) : serverVideo === 'ok' ? (
+            <iframe
+              title="video ok"
+              width="100%"
+              height="600"
+              src="//ok.ru/videoembed/5065806514897"
+              frameborder="0"
+              allow="autoplay"
+              allowfullscreen
+            ></iframe>
+          ) : (
+            <></>
+          )}
           {/* section change server video */}
           <div className="servers" style={{ display: 'flex', 'justify-content': 'center' }}>
-            <Button type="button" disabled variant="info" className="change-server">
-              Server 1
+            <Button
+              type="button"
+              variant="info"
+              onClick={() => setServerVideo('local')}
+              className={`change-server  ${serverVideo === 'local' ? 'disabled' : ''} `}
+            >
+              Server local
             </Button>
-            <Button variant="info" className="change-server">
+            <Button
+              variant="info"
+              onClick={() => setServerVideo('abyss')}
+              className={`change-server  ${serverVideo === 'abyss' ? 'disabled' : ''} `}
+            >
               Server abyss
             </Button>
-            <Button variant="info" className="change-server">
+            <Button
+              variant="info"
+              onClick={() => setServerVideo('mega')}
+              className={`change-server  ${serverVideo === 'mega' ? 'disabled' : ''} `}
+            >
               Server mega
+            </Button>
+            <Button
+              variant="info"
+              onClick={() => setServerVideo('ok')}
+              className={`change-server  ${serverVideo === 'ok' ? 'disabled' : ''} `}
+            >
+              Server ok
             </Button>
           </div>
           {/* movie summary */}
@@ -102,18 +167,17 @@ function Watch(props) {
           )}
 
           <Rating /> */}
-
           {/* episode section */}
           <div className="episode-section">
             <div className="episode-section-title">
               <h3 className="title">Tập phim</h3>
             </div>
             <ul className="list-movie-episodes">
-              {infomationMovie?.episodes?.map((item, index) => (
+              {currentMovie?.episodes?.map((item, index) => (
                 <li className={'movie-episode '} key={index}>
                   <Link
                     onClick={handleChangeEpisode}
-                    to={`/xem-phim/${infomationMovie.name_URL}/` + convertToUrl(item.name)}
+                    to={`/xem-phim/${currentMovie.name_URL}/` + convertToUrl(item.name)}
                   >
                     {' '}
                     {item.name}
@@ -128,7 +192,7 @@ function Watch(props) {
               <MovieList
                 movieListTitle="Phim liên quan"
                 query={{
-                  genres: infomationMovie?.genres[0]._id,
+                  // genres: infomationMovie?.genres[0]._id,
                   _page: '1',
                   _limit: '12',
                 }}

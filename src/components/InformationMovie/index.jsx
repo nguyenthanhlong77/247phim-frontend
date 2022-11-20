@@ -3,8 +3,6 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { BsFillEyeFill, BsFillHandThumbsUpFill, BsFillPlayFill } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import userApi from '../../api/userApi';
-import { authActions } from '../../redux-toolkit/slice/auth';
 import { movieActions } from '../../redux-toolkit/slice/movie';
 import convertToUrl from '../../utils/convertToUrl';
 import Rating from '../Rating';
@@ -12,37 +10,35 @@ import Rating from '../Rating';
 import './style.scss';
 
 function InformationMovie(props) {
-  const [typeLike, setTypeLike] = useState(true);
+  const [isLike, setIsLike] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const countries = useSelector((state) => state.public.countries);
   const currentMovie = useSelector((state) => state.movie.currentMovie);
-
-  // const countries = useSelector((state) => state.public.countries);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const movieID = useSelector((state) => state.movie._id);
   const currentUser = useSelector((state) => state.auth.currentUser);
 
   const handlePlay = () => {
-    console.log(currentMovie._id);
     dispatch(movieActions.updateView(currentMovie._id));
-    navigate(`/xem-phim/${currentMovie.name_URL}/${convertToUrl(currentMovie.episodes[0].name)}`);
+    navigate(`/xem-phim/${currentMovie.name_URL}/${currentMovie.episodes[0].name_URL}`);
   };
 
   useEffect(() => {
-    if (currentUser && movieID) {
+    if (currentUser && currentMovie) {
       let newTypeLike = true;
-      currentUser.like_movies?.map((movie) => {
-        if (movie === movieID) newTypeLike = false;
+
+      currentUser?.liked_movies.forEach((movie) => {
+        if (movie === currentMovie._id.toString()) {
+          newTypeLike = false;
+        }
       });
-      setTypeLike(newTypeLike);
+      setIsLike(newTypeLike);
     }
-  }, [movieID, currentUser]);
+  }, [currentUser, currentMovie]);
 
   const handleLikeMovie = async () => {
     if (isLoggedIn) {
-      await userApi.updateNewLikeMovie({ type_like: typeLike, movieID: movieID });
-      dispatch(authActions.reloadData());
-      dispatch(movieActions.reloadData(movieID));
+      dispatch(movieActions.updateLike({ isLike, movieID: currentMovie._id }));
     }
 
     if (!isLoggedIn) {
@@ -55,7 +51,6 @@ function InformationMovie(props) {
     currentMovie.episodes.map((episode) => {
       if (episode.name === e.target.innerText) {
         dispatch(movieActions.updateView(currentMovie._id));
-        dispatch(movieActions.updateCurentEpisodeSuccess(episode));
         window.scrollTo(0, 0);
       }
     });
@@ -110,9 +105,9 @@ function InformationMovie(props) {
                     </li>
                     <li>
                       <span>Quốc gia:</span>{' '}
-                      {/* {countries?.map((country) =>
+                      {countries?.map((country) =>
                         country._id === currentMovie.country ? country.name : ''
-                      )} */}
+                      )}
                     </li>
                     <li>
                       <span>Thể loại:</span>
@@ -129,10 +124,14 @@ function InformationMovie(props) {
               </Row>
               <Row className="liking-movie ">
                 <Col xs={12} md={3}>
-                  <button onClick={handleLikeMovie}>{typeLike ? 'Like' : 'Unlike'}</button>
+                  <button onClick={handleLikeMovie}>{isLike ? 'Like' : 'Unlike'}</button>
                 </Col>
                 <Col xs={12} md={9}>
-                  <Rating amount={currentMovie.rate.amount} total={currentMovie.rate.total} />
+                  <Rating
+                    movieID={currentMovie._id}
+                    amount={currentMovie.rate.amount}
+                    total={currentMovie.rate.total}
+                  />
                 </Col>
               </Row>
             </Col>
@@ -147,6 +146,7 @@ function InformationMovie(props) {
                 <li className={'movie-episode '} key={index}>
                   <Link
                     onClick={handleChangeEpisode}
+                    // to={`/xem-phim/${currentMovie.name_URL}/`}
                     to={`/xem-phim/${currentMovie.name_URL}/` + convertToUrl(item.name)}
                   >
                     {' '}
@@ -186,10 +186,14 @@ function InformationMovie(props) {
 
               <Row className="liking-movie ">
                 <Col xs={12} md={3}>
-                  <button onClick={handleLikeMovie}>{typeLike ? 'Like' : 'Unlike'}</button>
+                  <button onClick={handleLikeMovie}>{isLike ? 'Like' : 'Unlike'}</button>
                 </Col>
                 <Col xs={12} md={9}>
-                  <Rating amount={currentMovie.rate.amount} total={currentMovie.rate.total} />
+                  <Rating
+                    movieID={currentMovie._id}
+                    amount={currentMovie.rate.amount}
+                    total={currentMovie.rate.total}
+                  />
                 </Col>
               </Row>
             </div>
@@ -204,6 +208,7 @@ function InformationMovie(props) {
                 <li className={'movie-episode '} key={index}>
                   <Link
                     onClick={handleChangeEpisode}
+                    // to={`/xem-phim/${currentMovie.name_URL}/`}
                     to={`/xem-phim/${currentMovie.name_URL}/` + convertToUrl(item.name)}
                   >
                     {' '}

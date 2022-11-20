@@ -1,16 +1,16 @@
-import axiosClient from "./axiosClient";
+import axiosClient from './axiosClient';
 
 const userApi = {
   getProfile: () => {
-    const url = "/user/profile";
+    const url = '/user/profile';
     return axiosClient.get(url);
   },
   addNewComment: (data) => {
-    const url = `/user/movies/${data.movieID}/comment/new`;
-    return axiosClient.patch(url, { body: data.content });
+    const url = `/comments/create`;
+    return axiosClient.post(url, data);
   },
-  updateNewLikeMovie: (data) => {
-    const url = `/user/like-movies/new`;
+  updateLikedMovie: (data) => {
+    const url = `/user/liked-movies/update`;
     return axiosClient.patch(url, data);
   },
   getListLikedMovie: () => {

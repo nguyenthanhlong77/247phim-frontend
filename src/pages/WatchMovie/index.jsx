@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import publicApi from '../../api/publicApi';
 import PlayerSection from './components/PlayerSection';
-import CommentSection from './components/CommentSection';
+import CommentSection from '../../components/CommentSection';
 import { movieActions } from '../../redux-toolkit/slice/movie';
 import InformationMovie from '../../components/InformationMovie';
 
@@ -18,7 +18,7 @@ function WatchMovie(props) {
   //   // update current movie
   //   const movieURL = location.pathname.split('/')[2];
   //   dispatch(movieActions.isSelecting(movieURL));
-
+  //   dispatch(movieActions.updateCurentEpisodeSuccess(undefined));
   // }, [location.pathname.split('/')[2]]);
 
   return (

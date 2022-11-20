@@ -73,6 +73,13 @@ function* watchLoginFlow(action) {
   }
 }
 
+function* handleReloadData() {
+  // Get profile user when user is logged
+  const res = yield userApi.getProfile();
+  const user = res.user;
+  yield put(authActions.reloadDataSuccess(user));
+}
+
 export default function* authSaga() {
   yield fork(watchLoginFlow);
 
@@ -81,7 +88,7 @@ export default function* authSaga() {
   if (isLoggedIn) {
     yield call(handleIsLoggedIn);
   }
-  yield takeEvery(authActions.reloadData.type, handleIsLoggedIn);
+  yield takeEvery(authActions.reloadData.type, handleReloadData);
   yield takeEvery(authActions.register.type, handleRegister);
   yield takeEvery(authActions.updateLikeMovies.type, handleUpdateLikeMovies);
 }

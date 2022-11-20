@@ -60,19 +60,19 @@ function AdminCreateMovie(props) {
     setGenresOptions(newGenresOption);
   }, [genres]);
 
-  const handleShowModalImportImage = () => {
-    setModalImageShow(true);
-  };
-  const handleHideModalImportImage = () => {
-    setModalImageShow(false);
-  };
-  const handleShowModalImportVideo = () => {
-    setModalVideoShow(true);
-  };
+  // const handleShowModalImportImage = () => {
+  //   setModalImageShow(true);
+  // };
+  // const handleHideModalImportImage = () => {
+  //   setModalImageShow(false);
+  // };
+  // const handleShowModalImportVideo = () => {
+  //   setModalVideoShow(true);
+  // };
 
-  const handleHideModalImportVideo = () => {
-    setModalVideoShow(false);
-  };
+  // const handleHideModalImportVideo = () => {
+  //   setModalVideoShow(false);
+  // };
 
   const justValue = (genres) => {
     const newGenres = [];
@@ -98,37 +98,36 @@ function AdminCreateMovie(props) {
       episodes: [{ name: nameEpisode, URL_episode: data.episodes }],
       URL_image: data.URL_image,
     };
-    console.log(movie);
     const res = await adminApi.addNewMovie(movie);
     console.log(res.success);
     res.success ? navigate('/admin/danh-sach-phim') : alert('Phim vừa tạo đã tồn tại!!!');
   };
 
-  const handleUploadImage = (e) => {
-    const imageFormData = new FormData();
-    imageFormData.append('name', imageName);
-    imageFormData.append('image', image);
+  // const handleUploadImage = (e) => {
+  //   const imageFormData = new FormData();
+  //   imageFormData.append('name', imageName);
+  //   imageFormData.append('image', image);
 
-    axios({
-      url: 'http://localhost:4000/images/upload',
-      method: 'POST',
-      data: imageFormData,
-    }).then((res) => setImageUrl(res.data));
-    setModalImageShow(false);
-  };
+  //   axios({
+  //     url: 'http://localhost:4000/images/upload',
+  //     method: 'POST',
+  //     data: imageFormData,
+  //   }).then((res) => setImageUrl(res.data));
+  //   setModalImageShow(false);
+  // };
 
-  const handleUploadVideo = (e) => {
-    const videoFormData = new FormData();
-    videoFormData.append('name', videoName);
-    videoFormData.append('video', video);
-    console.log(video);
-    axios({
-      url: 'http://localhost:4000/videos/upload',
-      method: 'POST',
-      data: videoFormData,
-    }).then((res) => setVideoUrl(res.data));
-    setModalVideoShow(false);
-  };
+  // const handleUploadVideo = (e) => {
+  //   const videoFormData = new FormData();
+  //   videoFormData.append('name', videoName);
+  //   videoFormData.append('video', video);
+  //   console.log(video);
+  //   axios({
+  //     url: 'http://localhost:4000/videos/upload',
+  //     method: 'POST',
+  //     data: videoFormData,
+  //   }).then((res) => setVideoUrl(res.data));
+  //   setModalVideoShow(false);
+  // };
 
   return (
     <div className="container">
@@ -150,7 +149,7 @@ function AdminCreateMovie(props) {
             </Form.Group>
 
             <Form.Group as={Col} md="4" controlId="validationCustomUsername">
-              <Form.Label>Tên video URL </Form.Label>
+              <Form.Label>URL </Form.Label>
               <Form.Control {...register('name_URL')} type="text" placeholder="URL" />
               {errors.name_URL && <p className="error-message">{errors.name_URL.message}</p>}
             </Form.Group>
@@ -228,7 +227,7 @@ function AdminCreateMovie(props) {
           </Row>
 
           <Row className="mb-3">
-            <Form.Group as={Col} md="6">
+            <Form.Group as={Col} md="12">
               <Form.Label>URL hành ảnh</Form.Label>
               <InputGroup>
                 {/* <Button  id="button-addon2" onClick={handleShowModalImportImage}>
@@ -237,31 +236,17 @@ function AdminCreateMovie(props) {
                 {/* <InputGroup.Text onClick={handleShowModalImportImage} >Thêm ảnh</InputGroup.Text> */}
                 <Form.Control
                   {...register('URL_image')}
-                  value={imageUrl}
-                  onClick={handleShowModalImportImage}
+                  // value={imageUrl}
+                  // onClick={handleShowModalImportImage}
                   type="text"
-                  placeholder="URL hình ảnh"
+                  // placeholder="URL hình ảnh"
                 />
               </InputGroup>
               {errors.URL_image && <p className="error-message">{errors.URL_image.message}</p>}
             </Form.Group>
-
-            <Form.Group as={Col} md="6">
-              <Form.Label>URL video</Form.Label>
-              <InputGroup>
-                <Form.Control
-                  {...register('episodes')}
-                  type="text"
-                  placeholder="URL video"
-                  onClick={handleShowModalImportVideo}
-                  value={videoUrl}
-                />
-              </InputGroup>
-              {errors.episodes && <p className="error-message">{errors.episodes.message}</p>}
-            </Form.Group>
           </Row>
           <Row>
-            <Form.Group as={Col} md="12" c>
+            <Form.Group as={Col} md="12">
               <Form.Label>Mô tả</Form.Label>
               <Form.Control {...register('description')} as="textarea" rows={3} type="text" />
               {errors.description && <p className="error-message">{errors.description.message}</p>}
@@ -280,7 +265,7 @@ function AdminCreateMovie(props) {
         </Form>
 
         {/* modal import image */}
-        <Modal show={modalImageShow} onHide={handleHideModalImportImage}>
+        {/* <Modal show={modalImageShow} onHide={handleHideModalImportImage}>
           <Modal.Header closeButton>
             <Modal.Title>Thêm hình ảnh</Modal.Title>
           </Modal.Header>
@@ -304,10 +289,10 @@ function AdminCreateMovie(props) {
               </Button>
             </Form>
           </Modal.Body>
-        </Modal>
+        </Modal> */}
 
         {/* modal import video */}
-        <Modal show={modalVideoShow} onHide={handleHideModalImportVideo}>
+        {/* <Modal show={modalVideoShow} onHide={handleHideModalImportVideo}>
           <Modal.Header closeButton>
             <Modal.Title>Thêm video</Modal.Title>
           </Modal.Header>
@@ -331,7 +316,7 @@ function AdminCreateMovie(props) {
               </Button>
             </Form>
           </Modal.Body>
-        </Modal>
+        </Modal> */}
       </div>
     </div>
   );

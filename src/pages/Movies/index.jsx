@@ -34,7 +34,7 @@ function PageMovieList(props) {
     if (location.pathname.split('/')[1] === 'phim-bo') {
       let countryName = location.pathname.split('/')[2];
       let countryID = '';
-      countries.map((item) => {
+      countries?.map((item) => {
         if (item.name_URL === countryName) countryID = item._id;
       });
       let newInitQuery = { ...initQuery, type_movie: 'phimbo', country: countryID };
@@ -44,7 +44,7 @@ function PageMovieList(props) {
     if (location.pathname.split('/')[1] === 'quoc-gia') {
       let countryName = location.pathname.split('/')[2];
       let countryID = '';
-      countries.map((item) => {
+      countries?.map((item) => {
         if (item.name_URL === countryName) countryID = item._id;
       });
       let newInitQuery = { ...initQuery, country: countryID };
@@ -54,7 +54,7 @@ function PageMovieList(props) {
     if (location.pathname.split('/')[1] === 'the-loai') {
       let genresName = location.pathname.split('/')[2];
       let genresID = '';
-      genres.map((item) => {
+      genres?.map((item) => {
         if (item.name_URL === genresName) genresID = item._id;
       });
       let newInitQuery = { ...initQuery, genres: genresID };
@@ -74,7 +74,7 @@ function PageMovieList(props) {
       if (location.pathname.split('/')[1] === 'phim-bo') {
         let countryName = location.pathname.split('/')[2];
         let countryID = '';
-        countries.map((item) => {
+        countries?.map((item) => {
           if (item.name_URL === countryName) countryID = item._id;
         });
         setQuery({
@@ -90,7 +90,7 @@ function PageMovieList(props) {
       if (location.pathname.split('/')[1] === 'quoc-gia') {
         let countryName = location.pathname.split('/')[2];
         let countryID = '';
-        countries.map((item) => {
+        countries?.map((item) => {
           if (item.name_URL === countryName) countryID = item._id;
         });
         setQuery({ ...query, type_movie: '', country: countryID, name: '', genres: '', year: '' });
@@ -99,7 +99,7 @@ function PageMovieList(props) {
       if (location.pathname.split('/')[1] === 'the-loai') {
         let genresName = location.pathname.split('/')[2];
         let genresID = '';
-        genres.map((item) => {
+        genres?.map((item) => {
           if (item.name_URL === genresName) genresID = item._id;
         });
         setQuery({ ...query, type_movie: '', genres: genresID, name: '', country: '', year: '' });
