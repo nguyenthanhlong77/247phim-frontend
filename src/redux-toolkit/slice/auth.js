@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initState = {
   isLoggedIn: false,
-  role: undefined,
+  role: '',
   isLogging: false,
   isRegistering: false,
   isRegistered: false,
-  currentUser: undefined,
+  currentUser: {},
 };
 
 const authSlice = createSlice({

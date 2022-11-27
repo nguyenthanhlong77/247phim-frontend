@@ -4,6 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import Select from 'react-select';
 
 import { useSelector } from 'react-redux';
+import { ConstructionOutlined } from '@mui/icons-material';
 
 function ModalMovie(props) {
   const {
@@ -12,24 +13,9 @@ function ModalMovie(props) {
     formState: { errors },
     control,
   } = useForm();
-
   const [genresOptions, setGenresOptions] = useState([]);
-  const [movie, setMovie] = useState({
-    name: 'Ấu Trùng Lava: Mặt Dây Chuyền 1',
-    other_name: 'Larva Pendant',
-    name_URL: 'au-trung-lava-mat-day-chuyen-1',
-    director: 'Đang cập nhật',
-    type_movie: 'phimle',
-    year: '2022',
-    duration: 33,
-    description:
-      'Phần phim ngắn ngớ ngẩn tiếp theo của “Đảo ấu trùng” và “Bộ phim Đảo ấu trùng” xoay quanh những sự cố vụng về của đôi bạn hay xì hơi Đỏ và Vàng trong thành phố.',
-    casts: 'Đang cập nhật',
-    genres: ['629c74ca1fe09d0c71de1098'],
-    language: 'Tiếng Việt',
-    URL_image: 'https://biphim.cc/public/files/flim/120x160/1653569056.jpg',
-    country: '629c725d1fe09d0c71de1076',
-  });
+  const [movie, setMovie] = useState(props.data);
+
   const countries = useSelector((state) => state.public.countries);
   const genres = useSelector((state) => state.public.genres);
   useEffect(() => {
@@ -40,11 +26,12 @@ function ModalMovie(props) {
     setGenresOptions(newGenresOption);
   }, [genres]);
 
-  const handleUpdate = (data) => {};
+  const handleUpdate = (data) => {
+    props.onSubmit(data);
+  };
 
   return (
     <Modal size="lg" show={props.show} onHide={props.onHide}>
-      {console.log(props.movieSelected)}
       <Modal.Header closeButton>
         <Modal.Title>Thông tin phim</Modal.Title>
       </Modal.Header>
@@ -165,19 +152,30 @@ function ModalMovie(props) {
 
           <Form.Group as={Col} md="12" controlId="validationCustom01">
             <Form.Label>Thể loại</Form.Label>
-            <Controller
-              control={control}
-              name="genres"
-              render={({ field, value }) => (
-                <Select
-                  {...field}
-                  closeMenuOnSelect={false}
-                  isMulti
-                  options={genresOptions}
-                  defaultValue={{ value: movie.genres, label: 'Khong the bo lo' }}
-                />
-              )}
-            />
+            {!genresOptions[0] ? (
+              <></>
+            ) : (
+              <Controller
+                control={control}
+                name="genres"
+                render={({ field, value }) => (
+                  <Select
+                    {...field}
+                    closeMenuOnSelect={false}
+                    isMulti
+                    options={genresOptions}
+                    defaultValue={() => {
+                      let genresSelected = [];
+                      genresOptions.forEach((genres) => {
+                        if (movie.genres.includes(genres.value)) genresSelected.push(genres);
+                      });
+                      return genresSelected;
+                    }}
+                  />
+                )}
+              />
+            )}
+
             {errors.genres && <p className="error-message">{errors.genres.message}</p>}
           </Form.Group>
 

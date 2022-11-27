@@ -1,30 +1,23 @@
-import React from 'react';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { Button, Modal, Form } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import { adminActions } from '../../redux-toolkit/slice/admin';
-import { Controller, useForm } from 'react-hook-form';
 import MUIDataTable from 'mui-datatables';
+import React, { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 import adminApi from '../../api/adminApi';
-import './style.scss';
+import CreateEpisodeModal from '../../components/CreateEpisodeModal';
 import MovieModal from '../../components/MovieModal';
-import { WindowRounded, WindowSharp } from '@mui/icons-material';
-import { alertClasses } from '@mui/material';
+import { adminActions } from '../../redux-toolkit/slice/admin';
+import './style.scss';
 
 function MovieList(props) {
   const dispatch = useDispatch();
+  const movieList = useSelector((state) => state.admin.movieList);
   const [showModalUpdateMovie, setShowModalUpdateMovie] = useState(false);
-  const [movieSelected, setMovieSelected] = useState('');
   const [data, setData] = useState([]);
-  const [video, setVideo] = useState(undefined);
-  const [videoUrl, setVideoUrl] = useState('');
-  const [showModalEdit, setShowModalEdit] = useState(false);
   const [idMovieAddEpisode, setIdMovieAddEpisode] = useState('');
   const [showModalAddEpisode, setShowModalAddEpisode] = useState(false);
-  const movieList = useSelector((state) => state.admin.movielist);
-  const genres = useSelector((state) => state.public.genres);
-  const countries = useSelector((state) => state.public.countries);
+  const [movieSelected, setMovieSelected] = useState({});
+
   const {
     register,
     handleSubmit,
@@ -33,9 +26,42 @@ function MovieList(props) {
     control,
   } = useForm();
 
+  const fetchAllMovie = async () => {
+    const res = await adminApi.getAllMovies();
+    let newData = [];
+    res.movies.map((movie) =>
+      newData.push([
+        movie.name,
+        movie.other_name,
+        movie.type_movie,
+        movie.views,
+        movie.likes,
+        new Date(movie.createdAt).toLocaleString(),
+        movie,
+      ])
+    );
+    setData(newData);
+  };
+
   useEffect(() => {
-    fetchAllMovie();
-  }, []);
+    dispatch(adminActions.fetchMovieList());
+  }, [dispatch]);
+
+  useEffect(() => {
+    let newData = [];
+    movieList.map((movie) =>
+      newData.push([
+        movie.name,
+        movie.other_name,
+        movie.type_movie,
+        movie.views,
+        movie.likes,
+        new Date(movie.createdAt).toLocaleString(),
+        movie,
+      ])
+    );
+    setData(newData);
+  }, [movieList]);
 
   const columns = [
     'Tên phim',
@@ -54,8 +80,7 @@ function MovieList(props) {
               variant="warning"
               className="button-edit"
               onClick={() => {
-                console.log(value._id);
-                setMovieSelected(value._id);
+                setMovieSelected(value);
                 setShowModalUpdateMovie(!showModalUpdateMovie);
               }}
             >
@@ -93,24 +118,6 @@ function MovieList(props) {
 
     download: false,
     print: false,
-  };
-
-  const fetchAllMovie = async () => {
-    const res = await adminApi.getAllMovies();
-
-    let newData = [];
-    res.movies.map((movie) =>
-      newData.push([
-        movie.name,
-        movie.other_name,
-        movie.type_movie,
-        movie.views,
-        movie.likes,
-        movie.create_at,
-        movie,
-      ])
-    );
-    setData(newData);
   };
 
   const handleRemoveMovie = async (movie) => {
@@ -172,56 +179,65 @@ function MovieList(props) {
     console.log(res);
     if (res.success) {
       handleHideModalAddEpisode();
-      setVideoUrl('');
+      // setVideoUrl('');
       setIdMovieAddEpisode(undefined);
       reset();
     }
   };
 
+  const handleUpdateMovie = (value) => {
+    let update = {
+      URL_image: value.URL_image,
+      casts: value.cast,
+      country: value.country,
+      description: value.description,
+      director: value.director,
+      duration: value.duration,
+      language: value.language,
+      name: value.name,
+      name_URL: value.name_URL,
+      other_name: value.other_name,
+      type_movie: value.type_movie,
+      year: value.year,
+    };
+    if (value.genres !== undefined) {
+      let newGenres = [];
+      value.genres.forEach((genre) => newGenres.push(genre.value));
+      update = { ...update, genres: newGenres };
+    }
+    dispatch(adminActions.updateMovie({ movieID: movieSelected._id, update }));
+    setShowModalUpdateMovie(!showModalUpdateMovie);
+  };
+
+  const handleAddNewEpisode = (value) => {};
   return (
     <div className="">
       <MUIDataTable title={'Danh sách phim'} data={data} columns={columns} options={options} />
 
       {/* modal import video */}
-      <Modal show={showModalAddEpisode} onHide={handleHideModalAddEpisode}>
-        <Modal.Header closeButton>
-          <Modal.Title>Thêm Tập phim mới</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Label>Tên tập phim</Form.Label>
-            <Form.Control type="text" {...register('name')} placeholder="Tên tập phim" />
 
-            <Form.Label>Url server local</Form.Label>
-            <Form.Control type="text" {...register('srcLocal')} placeholder="Url server local" />
+      {showModalAddEpisode ? (
+        <CreateEpisodeModal
+          show={showModalAddEpisode}
+          onHide={() => {
+            window.confirm('ban khong tao tap phim moi');
+            setShowModalAddEpisode(!showModalAddEpisode);
+          }}
+        />
+      ) : (
+        <></>
+      )}
 
-            <Form.Label>Url server abyss</Form.Label>
-            <Form.Control type="text" {...register('srcAbyss')} placeholder="Url server abyss" />
-
-            <Form.Label>Url server mega</Form.Label>
-            <Form.Control type="text" {...register('srcMega')} placeholder="Url server mega" />
-
-            <Form.Label>Url server ok</Form.Label>
-            <Form.Control type="text" {...register('srcOk')} placeholder="Url server ok " />
-
-            <Button
-              type="button"
-              variant="success"
-              size="lg"
-              style={{ float: 'right', margin: '20px 10px' }}
-              onClick={handleSubmit(handleAddEpisode)}
-            >
-              Thêm tập mới
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
-
-      <MovieModal
-        show={showModalUpdateMovie}
-        movieSelected={movieSelected}
-        onHide={() => setShowModalUpdateMovie(!showModalUpdateMovie)}
-      />
+      {showModalUpdateMovie ? (
+        <MovieModal
+          show={showModalUpdateMovie}
+          data={movieSelected}
+          onHide={() => setShowModalUpdateMovie(!showModalUpdateMovie)}
+          onSubmit={(update) => handleUpdateMovie(update)}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

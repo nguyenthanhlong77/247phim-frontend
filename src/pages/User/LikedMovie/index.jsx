@@ -10,7 +10,8 @@ function LikedMovie(props) {
   useEffect(() => {
     const fetchListLikedMovie = async () => {
       const res = await userApi.getListLikedMovie();
-      setListMovie(res.like_movies);
+      console.log(res);
+      setListMovie(res.liked_movies);
     };
     fetchListLikedMovie();
   }, []);
