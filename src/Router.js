@@ -15,7 +15,10 @@ import LikedMovie from './pages/User/LikedMovie';
 import Movie from './pages/Movie';
 import Actor from './pages/Actor';
 import Watch from './pages/Watch';
-
+import News from './pages/News';
+import NewsCategory from './pages/News/NewsCategory';
+import NewsDetails from './pages/News/NewsDetails';
+import { createElement } from 'react';
 const PublicRoutes = [
   { path: '/', component: Home },
   { path: 'dang-ky', component: SignUp },
@@ -33,6 +36,9 @@ const PublicRoutes = [
   { path: 'movie', component: Movie },
   { path: 'actor', component: Actor },
   { path: 'watch/:movie_url/:episode', component: Watch },
+  { path: 'news', component: News },
+  { path: 'news/:category', component: NewsCategory },
+  { path: 'news/:category/:slug', component: NewsDetails },
 
   //
   { path: '/*', component: NotFound },

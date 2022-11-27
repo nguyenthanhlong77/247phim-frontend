@@ -12,7 +12,7 @@ import { FaUserCircle } from 'react-icons/fa';
 // react-hook-form
 import { useForm } from 'react-hook-form';
 // react-bootstrap
-import { Button, Form, FormControl, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Button, Form, FormControl, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap';
 // Components
 import { authActions } from '../../../../redux-toolkit/slice/auth';
 // img
@@ -136,6 +136,13 @@ const Header = (props) => {
               <></>
             )}
           </NavDropdown>
+          <NavItem
+            title="Tin tức"
+            className="header__menu-item"
+            style={{ alignSelf: 'center', color: 'gray', cursor: 'pointer' }}
+          >
+            <Link to={'/news'}>Tin tức</Link>
+          </NavItem>
         </Nav>
 
         {/* Navbar search */}
