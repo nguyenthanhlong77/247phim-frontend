@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './style.scss';
 import {
   InputGroup,
@@ -12,12 +12,33 @@ import {
 import BlogMovie from '../../../components/News/BlogMovie';
 import RightBlog from '../../../components/News/RightBlog';
 import { useLocation } from 'react-router-dom';
-
+import newsApi from '../../../api/newsApi';
 // index.propTypes = {
 
 // };
 
 function NewsCategory(props) {
+  let location = useLocation();
+  const [data, setData] = useState([]);
+  const [mostCountList, setMostCountList] = useState([]);
+
+  const getData = async () => {
+    let slug = location.pathname.split('/')[2];
+    let res = await newsApi.getPagingByCate(slug);
+    setData(res.news);
+  };
+  const getMostCount = async () => {
+    let dataReq = {
+      pageSize: 1,
+      pageIndex: 10,
+    };
+    let data = await newsApi.getByCount();
+    setMostCountList(data.news);
+  };
+  useEffect(() => {
+    getData();
+    getMostCount();
+  }, []);
   return (
     <>
       <div className="new-container">
@@ -71,10 +92,10 @@ function NewsCategory(props) {
         <div className="container">
           <div class="row blog-movie">
             <div className="left-container col-md-9 col-sm-12 col-xs-12">
-              <BlogMovie title={'Blog Phim'} />
+              <BlogMovie title={location.pathname.split('/')[2]} data={data} />
             </div>
             <div className="right-container col-md-3 col-sm-12 col-xs-12">
-              <RightBlog title={'Xem nhiều nhất'} />
+              <RightBlog title={'Xem nhiều nhất'} data={mostCountList} />
             </div>
           </div>
         </div>

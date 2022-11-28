@@ -1,23 +1,60 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
+
 import './style.scss';
-import {
-  InputGroup,
-  DropdownButton,
-  Dropdown,
-  Form,
-  Navbar,
-  Nav,
-  NavDropdown,
-} from 'react-bootstrap';
+import { InputGroup, DropdownButton, Dropdown, Form, Navbar, Nav } from 'react-bootstrap';
 import FocusReview from '../../components/News/FocusReview';
 import BlogMovie from '../../components/News/BlogMovie';
 import ReviewMovie from '../../components/News/ReviewMovie';
 import RightBlog from '../../components/News/RightBlog';
+import newsApi from '../../api/newsApi';
 // index.propTypes = {
 
 // };
 
-function index(props) {
+function NewsPage(props) {
+  const [mostCountList, setMostCountList] = useState([]);
+  const [blogMovieList, setBlogMovieList] = useState([]);
+  const [reviewMovie, setReviewMovie] = useState([]);
+  const [starMovieList, setStarMovieList] = useState([]);
+  const getBlogMovie = async () => {
+    let dataReq = {
+      pageSize: 1,
+      pageIndex: 10,
+    };
+    let data = await newsApi.getPagingByCate('blog-phim');
+    setBlogMovieList(data.news);
+  };
+  const getReviewMovie = async () => {
+    let dataReq = {
+      pageSize: 1,
+      pageIndex: 10,
+    };
+    let data = await newsApi.getPagingByCate('review-phim');
+    setReviewMovie(data.news);
+  };
+  const getStarList = async () => {
+    let dataReq = {
+      pageSize: 1,
+      pageIndex: 10,
+    };
+    let data = await newsApi.getPagingByCate('blog-sao');
+    setStarMovieList(data.news);
+  };
+  const getMostCount = async () => {
+    let dataReq = {
+      pageSize: 1,
+      pageIndex: 10,
+    };
+    let data = await newsApi.getByCount();
+    setMostCountList(data.news);
+  };
+  useEffect(() => {
+    getMostCount();
+    getBlogMovie();
+    getStarList();
+    getReviewMovie();
+  }, []);
   return (
     <>
       <div className="new-container">
@@ -65,7 +102,7 @@ function index(props) {
               />
             </InputGroup>
 
-            <FocusReview />
+            <FocusReview data={mostCountList} />
           </div>
         </div>
       </div>
@@ -73,12 +110,12 @@ function index(props) {
         <div className="container">
           <div class="row blog-movie">
             <div className="left-container col-md-9 col-sm-12 col-xs-12">
-              <BlogMovie title={'Blog Phim'} />
-              <ReviewMovie title={'Review Phim'} />
-              <BlogMovie title={'Blog Sao'} />
+              <BlogMovie title={'Blog Phim'} data={blogMovieList} />
+              <ReviewMovie title={'Review Phim'} data={reviewMovie} />
+              <BlogMovie title={'Blog Sao'} data={starMovieList} />
             </div>
             <div className="right-container col-md-3 col-sm-12 col-xs-12">
-              <RightBlog title={'Xem nhiều nhất'} />
+              <RightBlog title={'Xem nhiều nhất'} data={mostCountList} />
             </div>
           </div>
         </div>
@@ -87,4 +124,4 @@ function index(props) {
   );
 }
 
-export default index;
+export default NewsPage;

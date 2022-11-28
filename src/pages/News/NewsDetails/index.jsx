@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './style.scss';
 import {
   InputGroup,
@@ -13,12 +13,40 @@ import BlogMovie from '../../../components/News/BlogMovie';
 import RightBlog from '../../../components/News/RightBlog';
 import ReviewMovie from '../../../components/News/ReviewMovie';
 import { useLocation } from 'react-router-dom';
-
-// index.propTypes = {
-
-// };
+import newsApi from '../../../api/newsApi';
 
 function NewsDetails(props) {
+  let location = useLocation();
+  const [data, setData] = useState([]);
+  const [relativeNews, setRelativeNews] = useState([]);
+  const [mostCountList, setMostCountList] = useState([]);
+
+  const getRelativeNews = async () => {
+    let dataReq = {
+      category: data.category || 'review-phim',
+    };
+    let slug = location.pathname.split('/')[3];
+    let relativeNews = await newsApi.getRelative(slug, dataReq);
+    setRelativeNews(relativeNews.news);
+  };
+  const getNewData = async () => {
+    let slug = location.pathname.split('/')[3];
+    let data = await newsApi.getBySlug(slug);
+    setData(data.news);
+  };
+  const getMostCount = async () => {
+    let dataReq = {
+      pageSize: 1,
+      pageIndex: 10,
+    };
+    let data = await newsApi.getByCount();
+    setMostCountList(data.news);
+  };
+  useEffect(() => {
+    getNewData();
+    getRelativeNews();
+    getMostCount();
+  }, []);
   return (
     <>
       <div className="new-container">
@@ -72,16 +100,19 @@ function NewsDetails(props) {
         <div className="container">
           <div class="row blog-movie">
             <div className="left-container col-md-9 col-sm-12 col-xs-12">
-              <div className="cate-title">Review phim</div>
+              <div className="cate-title">{data?.category}</div>
               <div className="item-title">
-                <h1>Lời Nguyền Tầm Da: Ý tưởng mới lạ nhưng triển khai khó hiểu</h1>
+                <h1>{data?.title}</h1>
               </div>
-              <div className="item-date">13:35 - 04/11/2022</div>
-              <div className="item-content"> content nè</div>
-              <ReviewMovie title={'Post liên quan'} />
+              <div className="item-date">{new Date(data?.createdAt).toLocaleString}</div>
+              <div
+                className="item-content"
+                dangerouslySetInnerHTML={{ __html: data?.content }}
+              ></div>
+              <ReviewMovie title={'Post liên quan'} data={relativeNews} />
             </div>
             <div className="right-container col-md-3 col-sm-12 col-xs-12">
-              <RightBlog title={'Cùng nội dung'} />
+              <RightBlog title={'Xem nhiều nhất'} data={mostCountList} />
             </div>
           </div>
         </div>

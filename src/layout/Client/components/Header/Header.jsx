@@ -139,9 +139,11 @@ const Header = (props) => {
           <NavItem
             title="Tin tức"
             className="header__menu-item"
-            style={{ alignSelf: 'center', color: 'gray', cursor: 'pointer' }}
+            style={{ alignSelf: 'center', color: '#818181', cursor: 'pointer' }}
           >
-            <Link to={'/news'}>Tin tức</Link>
+            <Link to={'/news'} style={{ color: '#818181' }}>
+              Tin tức
+            </Link>
           </NavItem>
         </Nav>
 

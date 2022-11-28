@@ -64,6 +64,16 @@ function Sidebar(props) {
             </div>
           </div>
         </Link>
+        <Link to="/admin/tao-tin-tuc">
+          <div className={`category ${location === 'tao-slide' ? 'active' : ''}`}>
+            <div className="category-icon">
+              <i className="bi bi-plus-circle"></i>
+            </div>
+            <div className={'category-name'}>
+              <p>Thêm Tin Tức</p>
+            </div>
+          </div>
+        </Link>
       </div>
     </div>
   );

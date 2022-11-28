@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card, CardGroup, Row, Col, Image } from 'react-bootstrap';
 import './style.scss';
-
+import { Link, redirect } from 'react-router-dom';
 function RightBlog(props) {
   let title = props.title;
+  let data = props.data || [];
   return (
     <div className="" style={{ marginTop: '50px' }}>
       <div className="title-cate" style={{ borderBottom: '1px solid #405266' }}>
@@ -11,84 +12,25 @@ function RightBlog(props) {
       </div>
       <br />
       <div>
-        <Row style={{ marginTop: '10px' }}>
-          <Col lg={4}>
-            <Image
-              src="https://static1.dienanh.net/upload/202211/1x1_d05606d7-2897-4682-bded-c1958e22a7bc.jpg"
-              className="right-image"
-            ></Image>
-          </Col>
-          <Col lg={8}>
-            <div className="item-description">
-              <h6>Lời Nguyền Tầm Da: Ý tưởng mới lạ nhưng triển khai khó hiểu</h6>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: '10px' }}>
-          <Col lg={4}>
-            <Image
-              src="https://static1.dienanh.net/upload/202211/1x1_d05606d7-2897-4682-bded-c1958e22a7bc.jpg"
-              className="right-image"
-            ></Image>
-          </Col>
-          <Col lg={8}>
-            <div className="item-description">
-              <h6>Lời Nguyền Tầm Da: Ý tưởng mới lạ nhưng triển khai khó hiểu</h6>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: '10px' }}>
-          <Col lg={4}>
-            <Image
-              src="https://static1.dienanh.net/upload/202211/1x1_d05606d7-2897-4682-bded-c1958e22a7bc.jpg"
-              className="right-image"
-            ></Image>
-          </Col>
-          <Col lg={8}>
-            <div className="item-description">
-              <h6>Lời Nguyền Tầm Da: Ý tưởng mới lạ nhưng triển khai khó hiểu</h6>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: '10px' }}>
-          <Col lg={4}>
-            <Image
-              src="https://static1.dienanh.net/upload/202211/1x1_d05606d7-2897-4682-bded-c1958e22a7bc.jpg"
-              className="right-image"
-            ></Image>
-          </Col>
-          <Col lg={8}>
-            <div className="item-description">
-              <h6>Lời Nguyền Tầm Da: Ý tưởng mới lạ nhưng triển khai khó hiểu</h6>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: '10px' }}>
-          <Col lg={4}>
-            <Image
-              src="https://static1.dienanh.net/upload/202211/1x1_d05606d7-2897-4682-bded-c1958e22a7bc.jpg"
-              className="right-image"
-            ></Image>
-          </Col>
-          <Col lg={8}>
-            <div className="item-description">
-              <h6>Lời Nguyền Tầm Da: Ý tưởng mới lạ nhưng triển khai khó hiểu</h6>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: '10px' }}>
-          <Col lg={4}>
-            <Image
-              src="https://static1.dienanh.net/upload/202211/1x1_d05606d7-2897-4682-bded-c1958e22a7bc.jpg"
-              className="right-image"
-            ></Image>
-          </Col>
-          <Col lg={8}>
-            <div className="item-description">
-              <h6>Lời Nguyền Tầm Da: Ý tưởng mới lạ nhưng triển khai khó hiểu</h6>
-            </div>
-          </Col>
-        </Row>
+        {data &&
+          data.slice(0, 10).map((item) => {
+            return (
+              <Row style={{ marginTop: '10px' }}>
+                <Col lg={4}>
+                  <a href={`/news/${item?.category}/${item.slug}`}>
+                    <Image src={item?.thumb} className="right-image"></Image>
+                  </a>
+                </Col>
+                <Col lg={8}>
+                  <div className="item-description">
+                    <a href={`/news/${item?.category}/${item.slug}`}>
+                      <h6>{item?.description}</h6>
+                    </a>
+                  </div>
+                </Col>
+              </Row>
+            );
+          })}
       </div>
     </div>
   );

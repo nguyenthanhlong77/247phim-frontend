@@ -8,6 +8,8 @@ import WatchMovie from './pages/WatchMovie';
 import AdminHome from './pages/AdminHome';
 import AdminCreateMovie from './pages/AdminCreateMovie';
 import AdminCreateSlide from './pages/AdminCreateSlide';
+import AdminNews from './pages/AdminNews';
+
 import MovieList from './pages/AdminMovieList';
 import UserList from './pages/AdminUserList';
 import NotFound from './pages/NotFound';
@@ -18,7 +20,6 @@ import Watch from './pages/Watch';
 import News from './pages/News';
 import NewsCategory from './pages/News/NewsCategory';
 import NewsDetails from './pages/News/NewsDetails';
-import { createElement } from 'react';
 const PublicRoutes = [
   { path: '/', component: Home },
   { path: 'dang-ky', component: SignUp },
@@ -51,6 +52,7 @@ const PrivateRoutes = [
   { path: 'trang-chu', component: AdminHome },
   { path: 'tao-phim', component: AdminCreateMovie },
   { path: 'tao-slide', component: AdminCreateSlide },
+  { path: 'tao-tin-tuc', component: AdminNews },
 ];
 
 export { PrivateRoutes, PublicRoutes };
