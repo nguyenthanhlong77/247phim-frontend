@@ -26,7 +26,7 @@ function Comment(props) {
       <Col xs={12} md={10} className=" comment-content">
         <>
           <p style={{ fontSize: '14px', color: '#8f8f8f' }}>
-            {props.create_at.replace('T', ' ').slice(0, 19)}{' '}
+            {new Date(props.create_at).toLocaleString('en-GB', { hour12: false })}
           </p>
         </>
         <p>{props.content}</p>

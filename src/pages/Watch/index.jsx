@@ -1,39 +1,43 @@
-import React, { useRef, useEffect, useState } from 'react';
-import videojs from 'video.js';
-import PropTypes from 'prop-types';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, Button, Row, Col } from 'react-bootstrap';
+import { Link, useLocation } from 'react-router-dom';
+import videojs from 'video.js';
 import './style.scss';
 // components
-import VideoJS from '../../components/VideoJS';
-import InformationMovie from '../../components/InformationMovie';
+import poster from '../../assets/photos/logo.svg';
 import CommentSection from '../../components/CommentSection';
-import Rating from '../../components/Rating';
+import InformationMovie from '../../components/InformationMovie';
 import MovieList from '../../components/Movie/MovieList';
+import VideoJS from '../../components/VideoJS';
 import { movieActions } from '../../redux-toolkit/slice/movie';
 import convertToUrl from '../../utils/convertToUrl';
-import poster from '../../assets/photos/logo.svg';
+// import { BsEmojiSmileUpsideDown } from 'react-icons/bs';
 
 Watch.propTypes = {};
 
 function Watch(props) {
   const playerRef = useRef(null);
   const currentEpisode = useSelector((state) => state.movie.currentEpisode);
-  const [currentSource, setCurrentSource] = useState('');
+  // const [currentSource, setCurrentSource] = useState('');
+
   const dispatch = useDispatch();
   const location = useLocation();
   const currentMovie = useSelector((state) => state.movie.currentMovie);
-  const [serverVideo, setServerVideo] = useState('local');
+  const [serverVideo, setServerVideo] = useState({});
 
   useEffect(() => {
-    currentMovie?.episodes.map((episode) => {
-      if (episode.name_URL === location.pathname.split('/')[3]) {
-        dispatch(movieActions.updateCurrentEpisode(episode));
-        return;
-      }
-    });
-  }, [location.pathname.split('/')[3], currentMovie]);
+    const updateCurrentEpisode = (episodes) => {
+      episodes.forEach((episode) => {
+        if (episode.name_URL === location.pathname.split('/')[3]) {
+          dispatch(movieActions.updateCurrentEpisode(episode));
+          setServerVideo(episode.sources[0]);
+        }
+      });
+    };
+    if (currentMovie) updateCurrentEpisode(currentMovie?.episodes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentMovie, location.pathname]);
 
   const handlePlayerReady = (player) => {
     playerRef.current = player;
@@ -55,12 +59,19 @@ function Watch(props) {
   // }, [serverVideo]);
 
   const handleChangeEpisode = (e) => {
-    currentMovie.episodes.map((episode) => {
-      if (episode.name === e.target.innerText) {
-        dispatch(movieActions.updateView(currentMovie._id));
-        window.scrollTo(0, 0);
-      }
+    // currentMovie.episodes.foreach((episode) => {
+    //   if (episode.name === e.target.innerText) {
+    //     dispatch(movieActions.updateView(currentMovie._id));
+    //     window.scrollTo(0, 0);
+    //   }
+    // });
+  };
+  const handleChooseSrc = () => {
+    let src = '';
+    currentEpisode.sources.forEach((source) => {
+      if (source.server === serverVideo) src = source.src;
     });
+    return src;
   };
   return (
     <>
@@ -68,7 +79,27 @@ function Watch(props) {
       <div className="player">
         <Container style={{ backgroundColor: '#000' }}>
           {/* player */}
-          {serverVideo === 'local' ? (
+          {!currentEpisode ? (
+            <>{console.log(123)}</>
+          ) : (
+            <>
+              <iframe
+                title="video abyss"
+                width="100%"
+                height="600"
+                src={serverVideo.src}
+                frameborder="0"
+                scrolling="0"
+                allowfullscreen
+              ></iframe>
+              {console.log(
+                currentEpisode.sources.find((source) => {
+                  if (source.server === 'abyss') return source;
+                })
+              )}
+            </>
+          )}
+          {/* {serverVideo === 'local' ? (
             <VideoJS
               options={{
                 autoplay: false,
@@ -94,7 +125,7 @@ function Watch(props) {
               title="video abyss"
               width="100%"
               height="600"
-              src={currentEpisode ? currentEpisode.sources[1].src : ''}
+              src={currentEpisode ? currentEpisode.sources[0].src : ''}
               frameborder="0"
               scrolling="0"
               allowfullscreen
@@ -113,42 +144,58 @@ function Watch(props) {
               title="video ok"
               width="100%"
               height="600"
-              src="//ok.ru/videoembed/5065806514897"
+              src={currentEpisode ? currentEpisode.sources[2].src : ''}
               frameborder="0"
               allow="autoplay"
               allowfullscreen
             ></iframe>
           ) : (
             <></>
-          )}
+          )} */}
           {/* section change server video */}
-          <div className="servers" style={{ display: 'flex', 'justify-content': 'center' }}>
+          <div className="servers" style={{ display: 'flex', justifyContent: 'center' }}>
             <Button
               type="button"
               variant="info"
-              onClick={() => setServerVideo('local')}
-              className={`change-server  ${serverVideo === 'local' ? 'disabled' : ''} `}
+              onClick={() =>
+                currentEpisode.sources.find((source) => {
+                  if (source.server === 'local') setServerVideo(source);
+                })
+              }
+              className={`change-server  ${serverVideo.server === 'local' ? 'disabled' : ''} `}
             >
               Server local
             </Button>
             <Button
               variant="info"
-              onClick={() => setServerVideo('abyss')}
-              className={`change-server  ${serverVideo === 'abyss' ? 'disabled' : ''} `}
+              onClick={() =>
+                currentEpisode.sources.find((source) => {
+                  if (source.server === 'abyss') setServerVideo(source);
+                })
+              }
+              className={`change-server  ${serverVideo.server === 'abyss' ? 'disabled' : ''} `}
             >
               Server abyss
             </Button>
             <Button
               variant="info"
-              onClick={() => setServerVideo('mega')}
-              className={`change-server  ${serverVideo === 'mega' ? 'disabled' : ''} `}
+              onClick={() =>
+                currentEpisode.sources.find((source) => {
+                  if (source.server === 'mega') setServerVideo(source);
+                })
+              }
+              className={`change-server  ${serverVideo.server === 'mega' ? 'disabled' : ''} `}
             >
               Server mega
             </Button>
             <Button
               variant="info"
-              onClick={() => setServerVideo('ok')}
-              className={`change-server  ${serverVideo === 'ok' ? 'disabled' : ''} `}
+              onClick={() =>
+                currentEpisode.sources.find((source) => {
+                  if (source.server === 'ok') setServerVideo(source);
+                })
+              }
+              className={`change-server  ${serverVideo.server === 'ok' ? 'disabled' : ''} `}
             >
               Server ok
             </Button>

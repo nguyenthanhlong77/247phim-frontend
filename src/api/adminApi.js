@@ -29,6 +29,10 @@ const adminApi = {
     const url = `/admin/episodes/create`;
     return axiosClient.post(url, data);
   },
+  updateMovie: (movieID, data) => {
+    const url = `/admin/movies/${movieID}/update`;
+    return axiosClient.patch(url, data);
+  },
 };
 
 export default adminApi;

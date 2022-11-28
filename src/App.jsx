@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useLocation } from 'react-router-dom';
@@ -10,25 +11,33 @@ import { PrivateRoutes, PublicRoutes } from './Router';
 
 function App() {
   const location = useLocation();
+
   const dispatch = useDispatch();
   const role = useSelector((state) => state.auth.role);
   const isSelected = useSelector((state) => state.movie.isSelected);
   useEffect(() => {
-    if (
-      location.pathname.split('/')[1] === 'phim' ||
-      location.pathname.split('/')[1] === 'xem-phim'
-    )
-      dispatch(movieActions.selecting(location.pathname.split('/')[2]));
+    const selectMovie = () => {
+      if (
+        location.pathname.split('/')[1] === 'phim' ||
+        location.pathname.split('/')[1] === 'xem-phim'
+      )
+        dispatch(movieActions.selecting(location.pathname.split('/')[2]));
 
-    if (
-      isSelected &&
-      (location.pathname.split('/')[1] != 'phim' || location.pathname.split('/')[1] != 'xem-phim')
-    )
-      dispatch(movieActions.unSelected());
-  }, [location.pathname]);
+      if (
+        isSelected &&
+        (location.pathname.split('/')[1] !== 'phim' ||
+          location.pathname.split('/')[1] !== 'xem-phim')
+      )
+        dispatch(movieActions.unSelected());
+    };
+    selectMovie();
+  }, [location]);
 
   useEffect(() => {
-    dispatch(publicActions.loadingData());
+    const fetchPublicData = () => {
+      dispatch(publicActions.loadingData());
+    };
+    fetchPublicData();
   }, []);
 
   return (

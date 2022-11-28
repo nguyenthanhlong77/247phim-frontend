@@ -14,7 +14,7 @@ const userApi = {
     return axiosClient.patch(url, data);
   },
   getListLikedMovie: () => {
-    const url = `/user/like-movies`;
+    const url = `/user/liked-movies`;
     return axiosClient.get(url);
   },
 };

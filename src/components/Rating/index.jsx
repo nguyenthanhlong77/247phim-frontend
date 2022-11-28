@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { BsStarFill, BsStarHalf, BsStar } from 'react-icons/bs';
-import { Start } from '@mui/icons-material';
-import './style.scss';
+import { BsStarFill } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import { movieActions } from '../../redux-toolkit/slice/movie';
+import './style.scss';
 
 Rating.propTypes = {};
 
@@ -32,18 +30,16 @@ function Rating(props) {
     <div>
       {stars.map((star, index) => {
         return (
-          <>
-            <BsStarFill
-              className={`star 
+          <BsStarFill
+            className={`star 
               ${Math.round(props.total / props.amount) >= star ? 'star-rated' : ' '}
               ${hoverValue >= star ? 'star-on' : 'star-off'}
               `}
-              key={star}
-              onClick={() => handleOnClick(star)}
-              onMouseOver={() => handleOnMouseOver(star)}
-              onMouseLeave={() => handleOnMouseLeave()}
-            />
-          </>
+            key={star}
+            onClick={() => handleOnClick(star)}
+            onMouseOver={() => handleOnMouseOver(star)}
+            onMouseLeave={() => handleOnMouseLeave()}
+          />
         );
       })}
       {props.amount === 0 ? 0 : (props.total / props.amount).toFixed(1)}/5 ({props.amount} bình chọn
