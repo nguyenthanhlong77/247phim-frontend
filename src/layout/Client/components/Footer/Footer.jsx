@@ -31,38 +31,38 @@ function Footer(props) {
           </Col>
           <Col md={4}>
             <p className="title">Phim bộ</p>
-            <Link className="footer-link" to="/phim-le/">
-              Phim siêu anh hùng
+            <Link className="footer-link" to="/phim-bo/trung-quoc">
+              Trung Quốc
             </Link>
-            <Link className="footer-link" to="/phim-le/">
-              Phim tình cảm
+            <Link className="footer-link" to="/phim-bo/han-quoc">
+              Hàn Quốc
             </Link>
-            <Link className="footer-link" to="/phim-le/">
-              Phim tài liệu
+            <Link className="footer-link" to="/phim-bo/thai-lan">
+              Thái Lan
             </Link>
-            <Link className="footer-link" to="/phim-le/">
-              Phim hài
+            <Link className="footer-link" to="/phim-bo/my">
+              Mỹ
             </Link>
-            <Link className="footer-link" to="/phim-le/">
-              Phim thảm họa
+            <Link className="footer-link" to="/phim-bo/anh">
+              Anh
             </Link>
           </Col>
           <Col md={4}>
-            <p className="title">TV Show</p>
-            <Link className="footer-link" href="/phim-bo/">
-              Phim bộ Hàn Quốc
+            <p className="title">Thể loại</p>
+            <Link className="footer-link" href="/the-loai/khong-the-bo-lo">
+              Không thể bỏ lơ
             </Link>
-            <Link className="footer-link" href="/phim-bo/">
-              Phim bộ Trung Quốc
+            <Link className="footer-link" href="/the-loai/kiem-hiep">
+              Kiếm hiệp
             </Link>
-            <Link className="footer-link" href="/phim-bo/">
-              Phim bộ Mỹ
+            <Link className="footer-link" href="/the-loai/hanh-dong">
+              Hành động
             </Link>
-            <Link className="footer-link" href="/phim-bo/">
-              Phim bộ Việt Nam
+            <Link className="footer-link" href="/the-loai/bom-tan">
+              Bom tấm
             </Link>
-            <Link className="footer-link" href="/phim-bo/">
-              Phim bộ Hồng Kông
+            <Link className="footer-link" href="/the-loai/vien-tuong">
+              Viễn tưởng
             </Link>
           </Col>
         </Row>

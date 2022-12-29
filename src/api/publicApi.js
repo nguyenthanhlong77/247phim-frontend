@@ -13,11 +13,6 @@ const publicApi = {
     let url = `/movies/${movieID}`;
     return axiosClient.get(url);
   },
-
-  getCategories: () => {
-    let url = '/categories';
-    return axiosClient.get(url);
-  },
   updateViews: (movieID) => {
     let url = `/movies/${movieID}/new-view`;
     return axiosClient.patch(url);

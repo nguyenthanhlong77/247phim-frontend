@@ -9,6 +9,10 @@ const adminApi = {
     const url = '/admin/users';
     return axiosClient.get(url, { params });
   },
+  getAllSlides: (params) => {
+    const url = '/admin/slides';
+    return axiosClient.get(url, { params });
+  },
   addNewMovie: (params) => {
     const url = '/admin/movies/create';
     return axiosClient.post(url, params);
@@ -25,7 +29,7 @@ const adminApi = {
     const url = '/admin/slides/create';
     return axiosClient.post(url, params);
   },
-  addNewEpisode: (data) => {
+  createNewEpisode: (data) => {
     const url = `/admin/episodes/create`;
     return axiosClient.post(url, data);
   },

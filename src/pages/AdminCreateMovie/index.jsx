@@ -1,20 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Button, Col, Form, InputGroup, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import * as yup from 'yup';
 import adminApi from '../../api/adminApi';
+import toSlug from '../../common/function';
 import './style.scss';
 
 const schema = yup
   .object({
-    // name: yup.string().required('Bạn phải nhập thông tin này!'),
+    name: yup.string().required('Bạn phải nhập thông tin này!'),
     // other_name: yup.string().required('Bạn phải nhập thông tin này!'),
-    // name_URL: yup.string().required('Bạn phải nhập thông tin này!'),
+    name_URL: yup.string().required('Bạn phải nhập thông tin này!'),
     // year: yup.number("Phải nhập số").required("Bạn phải nhập thông tin này!"),
     // duration: yup.string().required("Bạn phải nhập thông tin này!"),
     // director: yup.string().required("Bạn phải nhập thông tin này!"),
@@ -29,17 +29,17 @@ const schema = yup
   .required();
 
 function AdminCreateMovie(props) {
-  const [validated, setValidated] = useState(false);
+  const [url, setUrl] = useState('');
   const [genresOptions, setGenresOptions] = useState([]);
-  const [modalImageShow, setModalImageShow] = useState(false);
-  const [modalVideoShow, setModalVideoShow] = useState(false);
-  const [image, setImage] = useState(undefined);
-  const [imageName, setImageName] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-
-  const [video, setVideo] = useState(undefined);
-  const [videoName, setVideoName] = useState('');
-  const [videoUrl, setVideoUrl] = useState('');
+  const [validated, setValidated] = useState(false);
+  // const [modalImageShow, setModalImageShow] = useState(false);
+  // const [modalVideoShow, setModalVideoShow] = useState(false);
+  // const [image, setImage] = useState(undefined);
+  // const [imageName, setImageName] = useState('');
+  // const [imageUrl, setImageUrl] = useState('');
+  // const [video, setVideo] = useState(undefined);
+  // const [videoName, setVideoName] = useState('');
+  // const [videoUrl, setVideoUrl] = useState('');
   const navigate = useNavigate();
   const countries = useSelector((state) => state.public.countries);
   const genres = useSelector((state) => state.public.genres);
@@ -134,11 +134,19 @@ function AdminCreateMovie(props) {
       <div className="create-movie">
         <h1 className="create-movie-title">Thêm Phim mới</h1>
 
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Form.Group as={Col} md="4">
-              <Form.Label>Tên phim</Form.Label>
-              <Form.Control {...register('name')} type="text" placeholder="Tên phim" />
+              <Form.Label>
+                Tên phim
+                {/* <span style={{ color: 'red', paddingLeft: '3px' }}>*</span> */}
+              </Form.Label>
+              <Form.Control
+                {...register('name')}
+                type="text"
+                placeholder="Tên phim"
+                onChange={(e) => setUrl(e.target.value)}
+              />
               {errors.name && <p className="error-message">{errors.name.message}</p>}
             </Form.Group>
 
@@ -150,7 +158,12 @@ function AdminCreateMovie(props) {
 
             <Form.Group as={Col} md="4" controlId="validationCustomUsername">
               <Form.Label>URL </Form.Label>
-              <Form.Control {...register('name_URL')} type="text" placeholder="URL" />
+              <Form.Control
+                {...register('name_URL')}
+                type="text"
+                placeholder="URL"
+                defaultValue={toSlug(url)}
+              />
               {errors.name_URL && <p className="error-message">{errors.name_URL.message}</p>}
             </Form.Group>
           </Row>

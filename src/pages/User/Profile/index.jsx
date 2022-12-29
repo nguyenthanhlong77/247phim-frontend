@@ -2,15 +2,43 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './style.scss';
 import { Row, Col, Tab, Nav, Form, Button } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { useSelector } from 'react-redux';
 
 function Profile(props) {
   const profile = useSelector((state) => state.auth.currentUser);
+  const schema = yup.object({});
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    control,
+  } = useForm({
+    // resolver: yupResolver(schema),
+  });
+
+  const { register: register2, handleSubmit: handleSubmit2 } = useForm({
+    // resolver: yupResolver(schema),
+  });
+
+  const handleUpdateProfile = (data) => {
+    console.log(data);
+    window.alert(data);
+  };
+
+  const handleChangePassword = (data) => {
+    console.log(data);
+    window.alert(data);
+  };
 
   return (
     <div className="container">
-      <div className="row user-profile">
-        <div className="col-md-9 col-12">
+      <div className=" user-profile">
+        <div className="">
           <div className="row left">
             <Tab.Container id="left-tabs" defaultActiveKey="profile">
               <Row>
@@ -38,27 +66,29 @@ function Profile(props) {
                           </li>
                           <li>
                             <Form.Label>Họ tên</Form.Label>
-                            <input type="text" name="name" placeholder="họ và tên"></input>
+                            <input {...register('name')} type="text" placeholder="họ và tên" />
                           </li>
                           <li>
                             <Form.Label>Phone</Form.Label>
-                            <input type="text" name="phone" placeholder="số điện thoại"></input>
+                            <input {...register('phone')} type="text" placeholder="số điện thoại" />
                           </li>
                           <li>
                             <Form.Label>Email</Form.Label>
                             <input
                               type="text"
+                              {...register('email')}
                               name="email"
                               placeholder="email"
-                              value={profile?.email}
+                              defaultValue={profile?.email}
                             ></input>
                           </li>
                           <Button
-                            type="button"
+                            type="submit"
                             id="btnProfile"
                             className="btn-orange"
-                            data-toggle="modal"
-                            data-target="#success-modal"
+                            // data-toggle="modal"
+                            // data-target="#success-modal"
+                            onClick={handleSubmit(handleUpdateProfile)}
                           >
                             Lưu lại
                           </Button>
@@ -70,29 +100,39 @@ function Profile(props) {
                         <span>Đổi mặt khẩu</span>
                       </div>
                       <ul className="profileForm">
-                        <Form id="profileForm">
+                        <Form id="changePasswordForm">
                           <li>
                             <Form.Label>Mật khẩu hiện tại</Form.Label>
-                            <input type="password" name="name" placeholder="**********"></input>
+                            <input
+                              {...register2('password')}
+                              type="password"
+                              name="password"
+                              placeholder="**********"
+                            ></input>
                           </li>
                           <li>
                             <Form.Label>Mật khẩu mới</Form.Label>
-                            <input type="password" name="phone" placeholder="Mật khẩu mới"></input>
+                            <input
+                              {...register2('newPassword')}
+                              type="password"
+                              name="newPassword"
+                              placeholder="Mật khẩu mới"
+                            ></input>
                           </li>
                           <li>
                             <Form.Label>Nhập lại mật khẩu mới</Form.Label>
                             <input
                               type="password"
-                              name="email"
+                              {...register2('reNewPassword')}
+                              name="reNewPassword"
                               placeholder="Nhập lại mật khẩu mới"
                             ></input>
                           </li>
                           <Button
-                            type="button"
-                            id="btnProfile"
+                            type="submit"
+                            id="btnProfile2"
                             className="btn-orange"
-                            data-toggle="modal"
-                            data-target="#success-modal"
+                            onClick={handleSubmit2(handleChangePassword)}
                           >
                             Đổi mật khẩu
                           </Button>

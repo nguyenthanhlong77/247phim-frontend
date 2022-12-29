@@ -1,12 +1,10 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import MovieList from '../../components/Movie/MovieList';
-import publicApi from '../../api/publicApi';
-import { Form, Row, Col } from 'react-bootstrap';
-import { Select } from 'react-select';
-import { useForm, controller, set } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import publicApi from '../../api/publicApi';
+import MovieList from '../../components/Movie/MovieList';
 
 PageMovieList.propTypes = {};
 
@@ -24,7 +22,13 @@ function PageMovieList(props) {
   const [listMovie, setListMovie] = useState([]);
 
   const [query, setQuery] = useState(() => {
-    let initQuery = {};
+    let initQuery = { _limit: 24 };
+
+    if (location.pathname.split('/')[1] === 'tim-kiem') {
+      let search = location.search.split('=')[1];
+      let newInitQuery = { ...initQuery, name: search };
+      initQuery = newInitQuery;
+    }
     if (location.pathname.split('/')[1] === 'phim-le') {
       let year = location.pathname.split('/')[2];
       let newInitQuery = { ...initQuery, type_movie: 'phimle', year: year };
@@ -60,7 +64,7 @@ function PageMovieList(props) {
       let newInitQuery = { ...initQuery, genres: genresID };
       initQuery = newInitQuery;
     }
-    console.log(initQuery);
+
     return initQuery;
   });
 
@@ -84,6 +88,7 @@ function PageMovieList(props) {
           name: '',
           genres: '',
           year: '',
+          _limit: 24,
         });
       }
 
@@ -93,7 +98,15 @@ function PageMovieList(props) {
         countries?.map((item) => {
           if (item.name_URL === countryName) countryID = item._id;
         });
-        setQuery({ ...query, type_movie: '', country: countryID, name: '', genres: '', year: '' });
+        setQuery({
+          ...query,
+          type_movie: '',
+          country: countryID,
+          name: '',
+          genres: '',
+          year: '',
+          _limit: 24,
+        });
       }
 
       if (location.pathname.split('/')[1] === 'the-loai') {
@@ -102,7 +115,15 @@ function PageMovieList(props) {
         genres?.map((item) => {
           if (item.name_URL === genresName) genresID = item._id;
         });
-        setQuery({ ...query, type_movie: '', genres: genresID, name: '', country: '', year: '' });
+        setQuery({
+          ...query,
+          type_movie: '',
+          genres: genresID,
+          name: '',
+          country: '',
+          year: '',
+          _limit: 24,
+        });
       }
 
       if (location.pathname.split('/')[1] === 'tim-kiem') {
@@ -113,6 +134,7 @@ function PageMovieList(props) {
           genres: '',
           year: '',
           type_movie: '',
+          _limit: 24,
         });
       }
     }
@@ -121,6 +143,7 @@ function PageMovieList(props) {
 
   useEffect(() => {
     const fetchMovies = async () => {
+      console.log(query);
       const res = await publicApi.getMovies(query);
       setListMovie(res);
     };
@@ -137,7 +160,7 @@ function PageMovieList(props) {
             <Form.Select
               {...register('country')}
               onChange={(e) => {
-                setQuery({ ...query, country: e.target.value });
+                setQuery({ ...query, country: e.target.value, _limit: 24 });
               }}
             >
               <option value=""> Tất cả</option>
@@ -154,10 +177,10 @@ function PageMovieList(props) {
             <Form.Select
               {...register('genres')}
               onChange={(e) => {
-                setQuery({ ...query, genres: e.target.value });
+                setQuery({ ...query, genres: e.target.value, _limit: 24 });
               }}
             >
-              <option value=""> Tất cả</option>
+              <option> Tất cả</option>
               {genres?.map((genre, index) => (
                 <option key={index} value={genre._id}>
                   {genre.name}
@@ -171,7 +194,7 @@ function PageMovieList(props) {
             <Form.Select
               {...register('year')}
               onChange={(e) => {
-                setQuery({ ...query, year: e.target.value });
+                setQuery({ ...query, year: e.target.value, _limit: 24 });
               }}
             >
               <option value=""> Tất cả</option>
@@ -185,6 +208,20 @@ function PageMovieList(props) {
         </Row>
       </Form>
       <MovieList isPageSearch={true} listMovie={listMovie} />
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+        {listMovie?.pagination?.total_docs > query._limit ? (
+          <Button
+            style={{ minWidth: '200px' }}
+            variant="warning"
+            type="button"
+            onClick={() => setQuery({ ...query, _limit: query._limit + 24 })}
+          >
+            Thêm
+          </Button>
+        ) : (
+          <></>
+        )}
+      </div>
     </div>
   );
 }

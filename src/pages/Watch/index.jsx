@@ -80,25 +80,21 @@ function Watch(props) {
         <Container style={{ backgroundColor: '#000' }}>
           {/* player */}
           {!currentEpisode ? (
-            <>{console.log(123)}</>
+            <></>
           ) : (
-            <>
+            <div className="video-section">
               <iframe
                 title="video abyss"
                 width="100%"
-                height="600"
+                height="100%"
                 src={serverVideo.src}
                 frameborder="0"
                 scrolling="0"
-                allowfullscreen
+                allowFullScreen
               ></iframe>
-              {console.log(
-                currentEpisode.sources.find((source) => {
-                  if (source.server === 'abyss') return source;
-                })
-              )}
-            </>
+            </div>
           )}
+
           {/* {serverVideo === 'local' ? (
             <VideoJS
               options={{
@@ -154,19 +150,30 @@ function Watch(props) {
           )} */}
           {/* section change server video */}
           <div className="servers" style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button
-              type="button"
-              variant="info"
-              onClick={() =>
-                currentEpisode.sources.find((source) => {
-                  if (source.server === 'local') setServerVideo(source);
-                })
-              }
-              className={`change-server  ${serverVideo.server === 'local' ? 'disabled' : ''} `}
-            >
-              Server local
-            </Button>
-            <Button
+            <>
+              {!currentEpisode ? (
+                <></>
+              ) : (
+                currentEpisode.sources.map((source) => (
+                  <Button
+                    type="button"
+                    variant="info"
+                    onClick={() =>
+                      currentEpisode.sources.forEach((item) => {
+                        if (item.server === source.server) setServerVideo(item);
+                      })
+                    }
+                    className={`change-server  ${
+                      serverVideo.server === source.server ? 'disabled' : ''
+                    } `}
+                  >
+                    {source.server}
+                  </Button>
+                ))
+              )}
+            </>
+
+            {/* <Button
               variant="info"
               onClick={() =>
                 currentEpisode.sources.find((source) => {
@@ -198,7 +205,7 @@ function Watch(props) {
               className={`change-server  ${serverVideo.server === 'ok' ? 'disabled' : ''} `}
             >
               Server ok
-            </Button>
+            </Button> */}
           </div>
           {/* movie summary */}
           <InformationMovie type="summary" />
@@ -215,7 +222,7 @@ function Watch(props) {
 
           <Rating /> */}
           {/* episode section */}
-          <div className="episode-section">
+          {/* <div className="episode-section">
             <div className="episode-section-title">
               <h3 className="title">Tập phim</h3>
             </div>
@@ -232,7 +239,7 @@ function Watch(props) {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
           {/* nominations section */}
           <div className="nominations">
             <div className="container">

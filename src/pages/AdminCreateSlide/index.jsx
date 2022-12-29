@@ -92,8 +92,7 @@ function AdminCreateSlide(props) {
               <InputGroup>
                 <Form.Control
                   {...register('URL_image')}
-                  value={imageUrl}
-                  onClick={handleShowModalImportImage}
+                  // onClick={handleShowModalImportImage}
                   type="text"
                   placeholder="URL hình ảnh"
                 />

@@ -99,6 +99,8 @@ function MovieList(props) {
 
             <Button
               onClick={() => {
+                setMovieSelected(value);
+
                 setShowModalAddEpisode(true);
                 setIdMovieAddEpisode(value._id);
               }}
@@ -115,9 +117,10 @@ function MovieList(props) {
 
   const options = {
     selectableRows: 'none',
-
     download: false,
     print: false,
+    fullWidth: true,
+    tableBodyHeight: '84vh',
   };
 
   const handleRemoveMovie = async (movie) => {
@@ -131,58 +134,15 @@ function MovieList(props) {
     setShowModalAddEpisode(false);
   };
 
-  const handleAddEpisode = async (data) => {
-    console.log({
-      name: data.name,
-      movie: idMovieAddEpisode,
-      sources: [
-        {
-          server: 'local',
-          src: data.srcLocal,
-        },
-        {
-          server: 'abyss',
-          src: data.srcAbyss,
-        },
-        {
-          server: 'mega',
-          src: data.srcMega,
-        },
-        {
-          server: 'ok',
-          src: data.srcOk,
-        },
-      ],
-    });
-    const res = await adminApi.addNewEpisode({
-      name: data.name,
-      movie: idMovieAddEpisode,
-      sources: [
-        {
-          server: 'local',
-          src: data.srcLocal,
-        },
-        {
-          server: 'abyss',
-          src: data.srcAbyss,
-        },
-        {
-          server: 'mega',
-          src: data.srcMega,
-        },
-        {
-          server: 'ok',
-          src: data.srcOk,
-        },
-      ],
-    });
-    console.log(res);
-    if (res.success) {
-      handleHideModalAddEpisode();
-      // setVideoUrl('');
-      setIdMovieAddEpisode(undefined);
-      reset();
-    }
+  const handleAddEpisode = (episode) => {
+    dispatch(
+      adminActions.createNewEpisode({
+        name: episode.name,
+        name_URL: episode.name_URL,
+        movie: movieSelected._id,
+        sources: episode.sources,
+      })
+    );
   };
 
   const handleUpdateMovie = (value) => {
@@ -209,7 +169,6 @@ function MovieList(props) {
     setShowModalUpdateMovie(!showModalUpdateMovie);
   };
 
-  const handleAddNewEpisode = (value) => {};
   return (
     <div className="">
       <MUIDataTable title={'Danh sách phim'} data={data} columns={columns} options={options} />
@@ -223,6 +182,7 @@ function MovieList(props) {
             window.confirm('ban khong tao tap phim moi');
             setShowModalAddEpisode(!showModalAddEpisode);
           }}
+          onSubmit={(episode) => handleAddEpisode(episode)}
         />
       ) : (
         <></>

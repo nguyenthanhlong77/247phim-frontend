@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useState } from 'react';
 import { Card, Col, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -9,33 +10,50 @@ AdminHome.propTypes = {};
 
 function AdminHome(props) {
   const dispatch = useDispatch();
-  const movieList = useSelector((state) => state.admin.movielist);
+
+  const movieList = useSelector((state) => state.admin.movieList);
   const genres = useSelector((state) => state.public.genres);
-  const navigate = useNavigate();
-  let viewsTotal = 0;
-  let likeTotal = 0;
-  let moviesCount = 0;
 
-  movieList?.map((movies, index) => {
-    viewsTotal = viewsTotal + movies.views;
-    likeTotal = likeTotal + movies.likes;
-    moviesCount = moviesCount + 1;
-    console.log(movies.likes);
+  const [data, setData] = useState({
+    byLikes: [],
+    byViews: [],
+    viewsTotal: 0,
+    likeTotal: 0,
   });
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(adminActions.fetchMovieList());
   }, []);
-  // Sort Movie < by View
-  const byViews = movieList?.slice(-4);
-  byViews?.sort(function (a, b) {
-    return b.views - a.views;
-  });
-  // Sort Movie < by Like
-  const byLikes = movieList?.slice(-4);
-  byLikes?.sort(function (a, b) {
-    return b.likes - a.likes;
-  });
+
+  useEffect(() => {
+    console.log(movieList.length);
+    let viewsTotal = 0;
+    let likeTotal = 0;
+    movieList?.forEach((movies) => {
+      viewsTotal = viewsTotal + movies.views;
+      likeTotal = likeTotal + movies.likes;
+    });
+
+    // Sort Movie < by View
+    const byView = [...movieList];
+    byView?.sort(function (a, b) {
+      return b.views - a.views;
+    });
+
+    // Sort Movie < by Like
+    let byLike = [...movieList];
+
+    byLike.sort(function (a, b) {
+      return b.likes - a.likes;
+    });
+
+    setData({
+      byViews: byView.splice(0, 4),
+      byLike: byLike.splice(0, 4),
+      viewsTotal: viewsTotal,
+      likeTotal: likeTotal,
+    });
+  }, [movieList]);
 
   return (
     <>
@@ -51,7 +69,7 @@ function AdminHome(props) {
                     <div className="col-9">
                       <h3 className="f-w-300 d-flex align-items-center m-b-0">
                         <i className="feather icon-arrow-up text-c-green f-30 m-r-5" />
-                        {viewsTotal}
+                        {data.viewsTotal}
                       </h3>
                     </div>
                   </div>
@@ -65,7 +83,8 @@ function AdminHome(props) {
                   <div className="row d-flex align-items-center">
                     <div className="col-9">
                       <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                        <i className="feather icon-arrow-down text-c-red f-30 m-r-5" /> {likeTotal}
+                        <i className="feather icon-arrow-down text-c-red f-30 m-r-5" />{' '}
+                        {data.likeTotal}
                       </h3>
                     </div>
                   </div>
@@ -80,7 +99,7 @@ function AdminHome(props) {
                     <div className="col-9">
                       <h3 className="f-w-300 d-flex align-items-center m-b-0">
                         <i className="feather icon-arrow-up text-c-green f-30 m-r-5" />{' '}
-                        {moviesCount}
+                        {movieList.length}
                       </h3>
                     </div>
                   </div>
@@ -101,7 +120,7 @@ function AdminHome(props) {
                 </tr>
               </thead>
               <tbody>
-                {byViews?.map((movie, index) => (
+                {data.byViews?.map((movie, index) => (
                   <tr key={index} onClick={() => navigate(`/xem-phim/${movie.name_URL}`)}>
                     <td>{index}</td>
                     <td>{movie.name}</td>
@@ -126,11 +145,11 @@ function AdminHome(props) {
                 </tr>
               </thead>
               <tbody>
-                {byLikes?.map((movie, index) => (
+                {data.byLike?.map((movie, index) => (
                   <tr key={index} onClick={() => navigate(`/xem-phim/${props.movie.name_URL}`)}>
                     <td>{index}</td>
                     <td>{movie.name}</td>
-                    <td>{movie.other_name}}</td>
+                    <td>{movie.other_name}</td>
                     <td>{movie.type_movie === 'phimle' ? 'Phim lẻ' : 'Phim bộ'}</td>
                     <td>{movie.likes}</td>
                   </tr>

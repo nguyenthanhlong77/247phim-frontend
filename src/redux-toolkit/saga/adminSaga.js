@@ -6,6 +6,7 @@ import { adminActions } from '../slice/admin';
 function* handleFetchMovieList(action) {
   try {
     const res = yield call(publicApi.getMovies, {});
+
     yield put(adminActions.fetchMovieListSuccess(res.movies));
   } catch (error) {
     console.log(error);
@@ -24,8 +25,8 @@ function* handleFetchUserList(action) {
 
 function* handleFetchSlideList(action) {
   try {
-    const res = yield call(adminApi.getAllUsers);
-    yield put(adminActions.fetchSlideListSuccess(res.users));
+    const res = yield call(adminApi.getAllSlides);
+    yield put(adminActions.fetchSlideListSuccess(res.slides));
   } catch (error) {
     yield put(adminActions.fetchSlideListFailed());
   }
@@ -42,11 +43,23 @@ function* handleUpdateMovie(action) {
   }
 }
 
-function* handleAddNewEpisode(action) {}
+function* handleCreateNewEpisode(action) {
+  try {
+    const res = yield call(
+      adminApi.createNewEpisode,
+
+      action.payload
+    );
+    yield put(adminActions.createNewEpisodeSuccess);
+  } catch (error) {
+    yield put(adminActions.createNewEpisodeFailed);
+  }
+}
 
 export default function* adminSaga() {
   yield takeEvery(adminActions.fetchMovieList.type, handleFetchMovieList);
   yield takeEvery(adminActions.fetchUserList.type, handleFetchUserList);
   yield takeEvery(adminActions.fetchSlideList.type, handleFetchSlideList);
   yield takeEvery(adminActions.updateMovie.type, handleUpdateMovie);
+  yield takeEvery(adminActions.createNewEpisode.type, handleCreateNewEpisode);
 }

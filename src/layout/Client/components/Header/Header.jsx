@@ -136,15 +136,15 @@ const Header = (props) => {
               <></>
             )}
           </NavDropdown>
-          <NavItem
+          <Nav.Item
             title="Tin tức"
             className="header__menu-item"
             style={{ alignSelf: 'center', color: '#818181', cursor: 'pointer' }}
           >
-            <Link to={'/news'} style={{ color: '#818181' }}>
+            <Link to={'/news'} style={{ color: '#818181' }} role={'button'} className="nav-link">
               Tin tức
             </Link>
-          </NavItem>
+          </Nav.Item>
         </Nav>
 
         {/* Navbar search */}

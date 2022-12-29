@@ -4,7 +4,6 @@ import './style.scss';
 
 function Sidebar(props) {
   const location = useLocation().pathname.split('/')[2];
-  console.log(location);
 
   return (
     <div className="sidebar">
@@ -65,7 +64,7 @@ function Sidebar(props) {
           </div>
         </Link>
         <Link to="/admin/tao-tin-tuc">
-          <div className={`category ${location === 'tao-slide' ? 'active' : ''}`}>
+          <div className={`category ${location === 'tao-tin-tuc' ? 'active' : ''}`}>
             <div className="category-icon">
               <i className="bi bi-plus-circle"></i>
             </div>

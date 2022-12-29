@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Form, Button, Row, Col } from 'react-bootstrap';
-import { Controler, useForm } from 'react-hook-form';
+import { Controler, useForm, useFieldArray } from 'react-hook-form';
 import PropTypes from 'prop-types';
 
 CreateEpisodeModal.propTypes = {};
@@ -12,16 +12,26 @@ function CreateEpisodeModal(props) {
     formState: { errors },
     control,
   } = useForm();
-  const [sources, setSources] = useState([{ source_name: '', src: '' }]);
 
-  const handleAddNew = () => {
-    setSources([...sources, { source_name: '', src: '' }]);
-  };
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'sources',
+  });
 
-  const handleRemove = (index) => {
-    const list = [...sources];
-    list.splice(index, 1);
-    setSources(list);
+  // const [sources, setSources] = useState([{ source_name: '', src: '' }]);
+
+  // const handleAddNew = () => {
+  //   setSources([...sources, { source_name: '', src: '' }]);
+  // };
+
+  // const handleRemove = (index) => {
+  //   const list = [...sources];
+  //   list.splice(index, 1);
+  //   setSources(list);
+  // };
+
+  const handleCreate = (data) => {
+    props.onSubmit(data);
   };
   return (
     <Modal show={props.show} onHide={props.onHide} size={'lg'}>
@@ -32,37 +42,55 @@ function CreateEpisodeModal(props) {
         <Form>
           <Form.Label>Tên tập phim</Form.Label>
           <Form.Control type="text" {...register('name')} placeholder="Tên tập phim" />
+          <Form.Label>Tên tập phim</Form.Label>
+
+          <Form.Label>Tên Url</Form.Label>
+          <Form.Control type="text" {...register('name_URL')} placeholder="Tên URL tập phim" />
+
           <Form.Label>Sources</Form.Label>
-          {sources.map((source, index) => (
-            <Row key={index} style={{ marginTop: '10px' }}>
-              <Col md={4}>
-                <Form.Control type="text" {...register('sourceName')} placeholder="Server name" />
+
+          <Button
+            type="button"
+            style={{ margin: '10px 20px' }}
+            onClick={() => append()}
+            variant="info"
+          >
+            Thêm
+          </Button>
+
+          {fields.map((field, index) => (
+            <Row key={field.id} style={{ margin: '10px 0px' }}>
+              <Col md={3}>
+                <Form.Control
+                  key={field.id}
+                  type="text"
+                  {...register(`sources.${index}.server_name`)}
+                  placeholder="Tên tập phim"
+                />
               </Col>
-              <Col md={6}>
-                <Form.Control type="text" {...register('src')} placeholder="Url server" />
+
+              <Col md={8}>
+                <Form.Control
+                  key={field.id}
+                  type="text"
+                  {...register(`sources.${index}.src`)}
+                  placeholder="Tên tập phim"
+                />
               </Col>
 
               <Col md={1}>
-                <Button onClick={handleAddNew}>Thêm</Button>
+                <Button onClick={() => remove(index)} variant="danger">
+                  Xóa
+                </Button>
               </Col>
-              {index !== 0 ? (
-                <Col md={1}>
-                  <Button onClick={() => handleRemove(index)} variant="danger">
-                    Xóa
-                  </Button>
-                </Col>
-              ) : (
-                <></>
-              )}
             </Row>
           ))}
-
           <Button
             type="button"
             variant="success"
             size="lg"
             style={{ float: 'right', margin: '20px 10px' }}
-            onClick={handleSubmit()}
+            onClick={handleSubmit(handleCreate)}
           >
             Thêm tập mới
           </Button>
